@@ -24,6 +24,8 @@ import argparse
 import logging
 import sys
 
+import pandas as pd
+
 from nutstools import __version__
 from nutstools import postalnuts
 from nutstools.nutsdata import COUNTRY_CODES, DEFAULT_YEAR, NUTS_YEARS, DEFAULT_COUNTRY
@@ -55,7 +57,6 @@ def postal_code2nuts(postal_code: str, level: int = 3):
       str: The NUTS-code belonging to the postal code
     """
 
-
     return "NLXXXX"
 
 
@@ -64,12 +65,21 @@ def postal_code2nuts(postal_code: str, level: int = 3):
 # API allowing them to be called directly from the terminal as a CLI
 # executable/script.
 
+
 def check_if_valid_nuts_level(value):
     """check if the argument is a valid nuts level. Must be between 0 and 3"""
     try:
+        value = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"Nuts level should be an integer between the range 0 - 3. Now given level {value}"
+        )
+    try:
         assert 0 <= value <= 3
     except AssertionError:
-        raise argparse.ArgumentTypeError(f"Nuts level should be in the range 0 - 3. Now given level {value}")
+        raise argparse.ArgumentTypeError(
+            f"Nuts level should be in the range 0 - 3. Now given level {value}"
+        )
     return value
 
 
@@ -89,7 +99,27 @@ def parse_args(args):
         action="version",
         version="EUNuts {ver}".format(ver=__version__),
     )
-    parser.add_argument(dest="postal_code", help="Postcode", type=str, metavar="POSTALCODE")
+    parser.add_argument(
+        "--postal_code",
+        help="Postcode",
+        type=str,
+        metavar="POSTALCODE",
+        action="append",
+    )
+    parser.add_argument(
+        "-i",
+        "--input_file_name",
+        help="Input file with Postal codes",
+        type=str,
+        metavar="INPUT_FILE_NAME",
+    )
+    parser.add_argument(
+        "-o",
+        "--output_file_name",
+        help="Output file with Postal codes and NUTS",
+        type=str,
+        metavar="OUTPUT_FILE_NAME",
+    )
     parser.add_argument(
         "-v",
         "--verbose",
@@ -164,16 +194,38 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    nuts = postalnuts.NutsData(year=args.year, country=args.country, nuts_code_directory=args.directory,
-                               update_settings=args.update_settings)
-
-    _logger.debug("Converteer postal_code string naar NUTS...")
-    nuts_code = postal_code2nuts(args.postal_code, args.level)
-    print(
-        "The NUTS-code at level {} of postal code {} is {}".format(
-            args.level, args.postal_code, nuts_code
+    if args.postal_code is None and args.input_file_name is None:
+        raise argparse.ArgumentError(
+            argument=args.postal_code,
+            message="Either --postal_code or --input_file_name option must be given",
         )
+    elif args.postal_code is not None and args.input_file_name is not None:
+        raise argparse.ArgumentError(
+            argument=args.postal_code,
+            message="Only one of the options --postal_code or --input_file_name option can "
+            "be given",
+        )
+
+    nuts_dl = postalnuts.NutsData(
+        year=args.year,
+        country=args.country,
+        nuts_code_directory=args.directory,
+        update_settings=args.update_settings,
     )
+
+    if args.input_file_name is not None:
+        postal_codes = pd.read_csv(args.input_file_name)
+    else:
+        postal_codes = pd.DataFrame[args.postal_code]
+
+    first_column_name = postal_codes.columns[0]
+
+    postal_codes = postal_codes[first_column_name].str.replace("'", "")
+
+    nuts = postalnuts.NutsPostalCode(file_name=nuts_dl.nuts_codes_file)
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=args.level)
+    print(nuts_codes)
+
     _logger.info("Script ends here")
 
 

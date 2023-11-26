@@ -1,7 +1,10 @@
 import logging
 import os
+
+import pandas as pd
 import yaml
 import requests
+from typing import Union
 import appdirs
 from pathlib import Path
 import requests_kerberos as rk
@@ -29,6 +32,47 @@ class HTTPAdapterWithProxyKerberosAuth(requests.adapters.HTTPAdapter):
         )
         headers["Proxy-Authorization"] = negotiate_details
         return headers
+
+
+class NutsPostalCode:
+    def __init__(
+        self,
+        file_name: Union[object, str]
+    ):
+        """
+        Parameters
+        ----------
+        file_name : object
+            Filename of the nuts input file
+        """
+        self.file_name = Path(file_name)
+
+        _logger.info(f"Reading data {file_name}")
+        self.nuts_data = pd.read_csv(
+            self.file_name.as_posix(), sep=";", compression="zip"
+        )
+        self.nuts_key = self.nuts_data.columns[0]
+        self.postal_codes_key = self.nuts_data.columns[1]
+        for column_name in self.nuts_data.columns:
+            self.nuts_data[column_name] = self.nuts_data[column_name].str.replace("'", "")
+        self.nuts_data = self.nuts_data.set_index(self.postal_codes_key, drop=True)[self.nuts_key]
+        _logger.debug(f"Done")
+
+    def postal2nuts(self, postal_codes: type(pd.Series), level=3):
+
+        nuts_codes = self.nuts_data.reindex(postal_codes)
+
+        if level == 2:
+            nuts_codes = nuts_codes.str.replace(".$", "", regex=True)
+            nuts_codes = nuts_codes.rename("NUTS2")
+        elif level == 1:
+            nuts_codes = nuts_codes.str.replace("..$", "", regex=True)
+            nuts_codes = nuts_codes.rename("NUTS1")
+        elif level == 0:
+            nuts_codes = nuts_codes.str.replace("...$", "", regex=True)
+            nuts_codes = nuts_codes.rename("NUTS0")
+
+        return nuts_codes
 
 
 class NutsData:
@@ -90,6 +134,8 @@ class NutsData:
             self.download_nuts_codes()
         else:
             _logger.info(f"File {self.nuts_codes_file} already downloaded!")
+
+        self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";", compression="zip")
 
     def get_nuts_settings(self):
 
