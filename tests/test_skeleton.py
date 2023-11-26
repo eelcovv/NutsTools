@@ -1,6 +1,6 @@
 import pytest
 
-from eunuts.main import postal_code2nuts, main
+from NutsTools.main import postal_code2nuts, main
 
 __author__ = "EVLT"
 __copyright__ = "EVLT"

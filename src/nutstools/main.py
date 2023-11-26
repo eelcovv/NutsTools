@@ -51,7 +51,7 @@ def parse_args(args):
     parser.add_argument(
         "--version",
         action="version",
-        version="EUNuts {ver}".format(ver=__version__),
+        version="NutsTools {ver}".format(ver=__version__),
     )
     parser.add_argument(
         "-p",
