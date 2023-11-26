@@ -1,8 +1,8 @@
 ========
-NutsInfo
+NutsTools
 ========
 
-This is the documentation of **NutsInfo**.
+This is the documentation of **NutsTools**.
 
 .. note::
 

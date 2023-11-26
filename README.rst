@@ -1,27 +1,27 @@
 .. These are examples of badges you might want to add to your README:
    please update the URLs accordingly
 
-    .. image:: https://api.cirrus-ci.com/github/<USER>/NutsInfo.svg?branch=main
+    .. image:: https://api.cirrus-ci.com/github/<USER>/NutsTools.svg?branch=main
         :alt: Built Status
-        :target: https://cirrus-ci.com/github/<USER>/NutsInfo
-    .. image:: https://readthedocs.org/projects/NutsInfo/badge/?version=latest
+        :target: https://cirrus-ci.com/github/<USER>/NutsTools
+    .. image:: https://readthedocs.org/projects/NutsTools/badge/?version=latest
         :alt: ReadTheDocs
-        :target: https://NutsInfo.readthedocs.io/en/stable/
-    .. image:: https://img.shields.io/coveralls/github/<USER>/NutsInfo/main.svg
+        :target: https://NutsTools.readthedocs.io/en/stable/
+    .. image:: https://img.shields.io/coveralls/github/<USER>/NutsTools/main.svg
         :alt: Coveralls
-        :target: https://coveralls.io/r/<USER>/NutsInfo
-    .. image:: https://img.shields.io/pypi/v/NutsInfo.svg
+        :target: https://coveralls.io/r/<USER>/NutsTools
+    .. image:: https://img.shields.io/pypi/v/NutsTools.svg
         :alt: PyPI-Server
-        :target: https://pypi.org/project/NutsInfo/
-    .. image:: https://img.shields.io/conda/vn/conda-forge/NutsInfo.svg
+        :target: https://pypi.org/project/NutsTools/
+    .. image:: https://img.shields.io/conda/vn/conda-forge/NutsTools.svg
         :alt: Conda-Forge
-        :target: https://anaconda.org/conda-forge/NutsInfo
-    .. image:: https://pepy.tech/badge/NutsInfo/month
+        :target: https://anaconda.org/conda-forge/NutsTools
+    .. image:: https://pepy.tech/badge/NutsTools/month
         :alt: Monthly Downloads
-        :target: https://pepy.tech/project/NutsInfo
+        :target: https://pepy.tech/project/NutsTools
     .. image:: https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter
         :alt: Twitter
-        :target: https://twitter.com/NutsInfo
+        :target: https://twitter.com/NutsTools
 
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
@@ -30,7 +30,7 @@
 |
 
 ========
-NutsInfo
+NutsTools
 ========
 
 
