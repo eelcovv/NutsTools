@@ -53,3 +53,4 @@ MANIFEST
 .conda*/
 .python-version
 examples/*.csv
+/install_exe.ps1
