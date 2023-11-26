@@ -23,6 +23,7 @@ References:
 import argparse
 import logging
 import sys
+from pathlib import Path
 
 import pandas as pd
 
@@ -127,6 +128,15 @@ def parse_args(args):
         help="set loglevel to INFO",
         action="store_const",
         const=logging.INFO,
+        default=logging.INFO
+    )
+    parser.add_argument(
+        "-q",
+        "--quiiet",
+        dest="loglevel",
+        help="set loglevel to WARNING",
+        action="store_const",
+        const=logging.WARNING,
     )
     parser.add_argument(
         "-vv",
@@ -214,9 +224,12 @@ def main(args):
     )
 
     if args.input_file_name is not None:
-        postal_codes = pd.read_csv(args.input_file_name)
+        input_file_name = Path(args.input_file_name)
+        postal_codes = pd.read_csv(input_file_name)
+        output_file_name = "_".join([input_file_name.with_suffix("").as_posix(), f"nuts{args.level}.csv"])
     else:
         postal_codes = pd.DataFrame[args.postal_code]
+        output_file_name = None
 
     first_column_name = postal_codes.columns[0]
 
@@ -224,7 +237,12 @@ def main(args):
 
     nuts = postalnuts.NutsPostalCode(file_name=nuts_dl.nuts_codes_file)
     nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=args.level)
-    print(nuts_codes)
+
+    if output_file_name is not None:
+        _logger.info(f"Writing nuts codes to {output_file_name}")
+        nuts_codes.to_csv(output_file_name)
+    else:
+        print(nuts_codes)
 
     _logger.info("Script ends here")
 
