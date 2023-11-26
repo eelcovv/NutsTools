@@ -4,7 +4,7 @@ console script. To run this script uncomment the following lines in the
 ``[options.entry_points]`` section in ``setup.cfg``::
 
     console_scripts =
-         fibonacci = nutsinfo.skeleton:run
+         fibonacci = nutstools.skeleton:run
 
 Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
 which will install the command ``fibonacci`` inside your current environment.
@@ -24,7 +24,9 @@ import argparse
 import logging
 import sys
 
-from nutsinfo import __version__
+from nutstools import __version__
+from nutstools import postalnuts
+from nutstools.nutsdata import COUNTRY_CODES, DEFAULT_YEAR, NUTS_YEARS, DEFAULT_COUNTRY
 
 __author__ = "EVLT"
 __copyright__ = "EVLT"
@@ -36,30 +38,39 @@ _logger = logging.getLogger(__name__)
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
 # Python scripts/interactive interpreter, e.g. via
-# `from nutsinfo.skeleton import fib`,
+# `from nutstools.skeleton import fib`,
 # when using this Python module as a library.
 
 
-def fib(n):
-    """Fibonacci example function
+def postal_code2nuts(postal_code: str, level: int = 3):
+    """Converter a postal code to Nuts
 
     Args:
-      n (int): integer
+      postal_code (str): string
+        The postal code that we want to convert
+      level (int): Integer
+        The level of the  NUTS code
 
     Returns:
-      int: n-th Fibonacci number
+      str: The NUTS-code belonging to the postal code
     """
-    assert n > 0
-    a, b = 1, 1
-    for _i in range(n - 1):
-        a, b = b, a + b
-    return a
+
+
+    return "NLXXXX"
 
 
 # ---- CLI ----
 # The functions defined in this section are wrappers around the main Python
 # API allowing them to be called directly from the terminal as a CLI
 # executable/script.
+
+def check_if_valid_nuts_level(value):
+    """check if the argument is a valid nuts level. Must be between 0 and 3"""
+    try:
+        assert 0 <= value <= 3
+    except AssertionError:
+        raise argparse.ArgumentTypeError(f"Nuts level should be in the range 0 - 3. Now given level {value}")
+    return value
 
 
 def parse_args(args):
@@ -76,9 +87,9 @@ def parse_args(args):
     parser.add_argument(
         "--version",
         action="version",
-        version="NutsInfo {ver}".format(ver=__version__),
+        version="EUNuts {ver}".format(ver=__version__),
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
+    parser.add_argument(dest="postal_code", help="Postcode", type=str, metavar="POSTALCODE")
     parser.add_argument(
         "-v",
         "--verbose",
@@ -89,12 +100,42 @@ def parse_args(args):
     )
     parser.add_argument(
         "-vv",
-        "--very-verbose",
+        "--debug",
         dest="loglevel",
         help="set loglevel to DEBUG",
         action="store_const",
         const=logging.DEBUG,
     )
+    parser.add_argument(
+        "-l",
+        "--level",
+        dest="level",
+        type=check_if_valid_nuts_level,
+        help="The level at we want to get the NUTS-code",
+        default=3,
+    )
+    parser.add_argument(
+        "--year",
+        help="The year of the NUTS files",
+        choices=NUTS_YEARS,
+        default=DEFAULT_YEAR,
+    )
+    parser.add_argument(
+        "--country",
+        help="The country code for the NUTS file ",
+        choices=COUNTRY_CODES,
+        default=DEFAULT_COUNTRY,
+    )
+    parser.add_argument(
+        "--update_settings",
+        help="Update the settings file with the new values",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--directory",
+        help="The location of the  the NUTS files. If not given, the default directory will be picked ",
+    )
+
     return parser.parse_args(args)
 
 
@@ -111,9 +152,9 @@ def setup_logging(loglevel):
 
 
 def main(args):
-    """Wrapper allowing :func:`fib` to be called with string arguments in a CLI fashion
+    """Wrapper allowing :func:`postal_code2nuts` to be called with string arguments in a CLI fashion
 
-    Instead of returning the value from :func:`fib`, it prints the result to the
+    Instead of returning the value from :func:`postal_code2nuts`, it prints the result to the
     ``stdout`` in a nicely formatted message.
 
     Args:
@@ -122,8 +163,17 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
-    _logger.debug("Starting crazy calculations...")
-    print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
+
+    nuts = postalnuts.NutsData(year=args.year, country=args.country, nuts_code_directory=args.directory,
+                               update_settings=args.update_settings)
+
+    _logger.debug("Converteer postal_code string naar NUTS...")
+    nuts_code = postal_code2nuts(args.postal_code, args.level)
+    print(
+        "The NUTS-code at level {} of postal code {} is {}".format(
+            args.level, args.postal_code, nuts_code
+        )
+    )
     _logger.info("Script ends here")
 
 
@@ -144,6 +194,6 @@ if __name__ == "__main__":
     # After installing your project with pip, users can also run your Python
     # modules as scripts via the ``-m`` flag, as defined in PEP 338::
     #
-    #     python -m nutsinfo.skeleton 42
+    #     python -m nutstools.skeleton 42
     #
     run()

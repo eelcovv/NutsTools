@@ -1,6 +1,6 @@
 import pytest
 
-from nutsinfo.skeleton import fib, main
+from eunuts.main import postal_code2nuts, main
 
 __author__ = "EVLT"
 __copyright__ = "EVLT"
@@ -9,11 +9,11 @@ __license__ = "MIT"
 
 def test_fib():
     """API Tests"""
-    assert fib(1) == 1
-    assert fib(2) == 1
-    assert fib(7) == 13
+    assert postal_code2nuts(1) == 1
+    assert postal_code2nuts(2) == 1
+    assert postal_code2nuts(7) == 13
     with pytest.raises(AssertionError):
-        fib(-10)
+        postal_code2nuts(-10)
 
 
 def test_main(capsys):
