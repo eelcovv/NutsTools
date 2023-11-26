@@ -1,15 +1,14 @@
 import logging
 import os
-
-import pandas as pd
-import yaml
-import requests
-from typing import Union
-import appdirs
 from pathlib import Path
-import requests_kerberos as rk
-from urllib3.util import parse_url
+from typing import Union
 
+import appdirs
+import pandas as pd
+import requests
+import requests_kerberos as rk
+import yaml
+from urllib3.util import parse_url
 
 from .nutsdata import (
     COUNTRY_CODES,
@@ -35,10 +34,7 @@ class HTTPAdapterWithProxyKerberosAuth(requests.adapters.HTTPAdapter):
 
 
 class NutsPostalCode:
-    def __init__(
-        self,
-        file_name: Union[object, str]
-    ):
+    def __init__(self, file_name: Union[object, str]):
         """
         Parameters
         ----------
@@ -54,11 +50,19 @@ class NutsPostalCode:
         self.nuts_key = self.nuts_data.columns[0]
         self.postal_codes_key = self.nuts_data.columns[1]
         for column_name in self.nuts_data.columns:
-            self.nuts_data[column_name] = self.nuts_data[column_name].str.replace("'", "")
-        self.nuts_data = self.nuts_data.set_index(self.postal_codes_key, drop=True)[self.nuts_key]
+            self.nuts_data[column_name] = (
+                self.nuts_data[column_name]
+                .str.replace("'", "")
+                .replace("\s", "", regex=True)
+            )
+        self.nuts_data = self.nuts_data.set_index(self.postal_codes_key, drop=True)[
+            self.nuts_key
+        ]
         _logger.debug(f"Done")
 
     def postal2nuts(self, postal_codes: type(pd.Series), level=3):
+
+        postal_codes = postal_codes.str.replace("\s", "", regex=True)
 
         nuts_codes = self.nuts_data.reindex(postal_codes)
 

@@ -101,6 +101,7 @@ def parse_args(args):
         version="EUNuts {ver}".format(ver=__version__),
     )
     parser.add_argument(
+        "-p",
         "--postal_code",
         help="Postcode",
         type=str,
@@ -128,15 +129,6 @@ def parse_args(args):
         help="set loglevel to INFO",
         action="store_const",
         const=logging.INFO,
-        default=logging.INFO
-    )
-    parser.add_argument(
-        "-q",
-        "--quiiet",
-        dest="loglevel",
-        help="set loglevel to WARNING",
-        action="store_const",
-        const=logging.WARNING,
     )
     parser.add_argument(
         "-vv",
@@ -226,14 +218,20 @@ def main(args):
     if args.input_file_name is not None:
         input_file_name = Path(args.input_file_name)
         postal_codes = pd.read_csv(input_file_name)
-        output_file_name = "_".join([input_file_name.with_suffix("").as_posix(), f"nuts{args.level}.csv"])
+        output_file_name = "_".join(
+            [input_file_name.with_suffix("").as_posix(), f"nuts{args.level}.csv"]
+        )
     else:
-        postal_codes = pd.DataFrame[args.postal_code]
+        postal_codes = pd.DataFrame(data=args.postal_code, columns=["CODES"])
         output_file_name = None
 
     first_column_name = postal_codes.columns[0]
 
-    postal_codes = postal_codes[first_column_name].str.replace("'", "")
+    postal_codes = (
+        postal_codes[first_column_name]
+        .str.replace("'", "")
+        .replace("\s", "", regex=True)
+    )
 
     nuts = postalnuts.NutsPostalCode(file_name=nuts_dl.nuts_codes_file)
     nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=args.level)
