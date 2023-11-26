@@ -1,23 +1,5 @@
 """
-This is a skeleton file that can serve as a starting point for a Python
-console script. To run this script uncomment the following lines in the
-``[options.entry_points]`` section in ``setup.cfg``::
-
-    console_scripts =
-         fibonacci = nutstools.skeleton:run
-
-Then run ``pip install .`` (or ``pip install -e .`` for editable mode)
-which will install the command ``fibonacci`` inside your current environment.
-
-Besides console scripts, the header (i.e. until ``_logger``...) of this file can
-also be used as template for Python modules.
-
-Note:
-    This file can be renamed depending on your needs or safely removed if not needed.
-
-References:
-    - https://setuptools.pypa.io/en/latest/userguide/entry_point.html
-    - https://pip.pypa.io/en/stable/reference/pip_install
+A tool to convert postal codes to NUTS-values based on the NUTS files distributed by Eurostat
 """
 
 import argparse
@@ -36,35 +18,6 @@ __copyright__ = "EVLT"
 __license__ = "MIT"
 
 _logger = logging.getLogger(__name__)
-
-
-# ---- Python API ----
-# The functions defined in this section can be imported by users in their
-# Python scripts/interactive interpreter, e.g. via
-# `from nutstools.skeleton import fib`,
-# when using this Python module as a library.
-
-
-def postal_code2nuts(postal_code: str, level: int = 3):
-    """Converter a postal code to Nuts
-
-    Args:
-      postal_code (str): string
-        The postal code that we want to convert
-      level (int): Integer
-        The level of the  NUTS code
-
-    Returns:
-      str: The NUTS-code belonging to the postal code
-    """
-
-    return "NLXXXX"
-
-
-# ---- CLI ----
-# The functions defined in this section are wrappers around the main Python
-# API allowing them to be called directly from the terminal as a CLI
-# executable/script.
 
 
 def check_if_valid_nuts_level(value):
