@@ -8,7 +8,7 @@ else:
 
 try:
     # Change here if project is renamed and does not equal the package name
-    dist_name = "EUNuts"
+    dist_name = "NutsTools"
     __version__ = version(dist_name)
 except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
