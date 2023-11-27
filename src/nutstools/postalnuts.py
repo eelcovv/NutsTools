@@ -44,8 +44,12 @@ class NutsPostalCode:
         self.file_name = Path(file_name)
 
         _logger.info(f"Reading data {file_name}")
+        if self.file_name.suffix == ".zip":
+            compression = "zip"
+        else:
+            compression = None
         self.nuts_data = pd.read_csv(
-            self.file_name.as_posix(), sep=";", compression="zip"
+            self.file_name.as_posix(), sep=";", compression=compression
         )
         self.nuts_key = self.nuts_data.columns[0]
         self.postal_codes_key = self.nuts_data.columns[1]
