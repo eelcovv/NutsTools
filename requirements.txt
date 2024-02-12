@@ -1,0 +1,12 @@
+appdirs
+importlib_metadata
+pandas
+pytest
+PyYAML
+PyYAML
+Requests
+requests_kerberos
+setuptools
+setuptools
+Sphinx
+urllib3
