@@ -6,7 +6,12 @@ from typing import Union
 import appdirs
 import pandas as pd
 import requests
-import requests_kerberos as rk
+
+try:
+    import requests_kerberos as rk
+except ImportError:
+    requests_kerberos = None
+
 import yaml
 from urllib3.util import parse_url
 
@@ -23,7 +28,8 @@ _logger = logging.getLogger(__name__)
 
 
 class HTTPAdapterWithProxyKerberosAuth(requests.adapters.HTTPAdapter):
-    def proxy_headers(self, proxy):
+    @staticmethod
+    def proxy_headers(proxy):
         headers = {}
         auth = rk.HTTPKerberosAuth()
         negotiate_details = auth.generate_request_header(
@@ -85,11 +91,11 @@ class NutsPostalCode:
 
 class NutsData:
     def __init__(
-        self,
-        year: str = None,
-        country: str = None,
-        nuts_code_directory: str = None,
-        update_settings: bool = False,
+            self,
+            year: str = None,
+            country: str = None,
+            nuts_code_directory: str = None,
+            update_settings: bool = False,
     ):
 
         if nuts_code_directory is None:
@@ -185,8 +191,13 @@ class NutsData:
             _logger.debug(
                 f"Adding kerberos authentication to session for proxy {proxies}"
             )
-            http_adapter_with_proxy_kerberos_auth = HTTPAdapterWithProxyKerberosAuth()
-            session.mount("https://", http_adapter_with_proxy_kerberos_auth)
+            if requests_kerberos is not None:
+                http_adapter_with_proxy_kerberos_auth = HTTPAdapterWithProxyKerberosAuth()
+                session.mount("https://", http_adapter_with_proxy_kerberos_auth)
+            else:
+                _logger.warning(
+                    f"Cannot mound kerberos for proxy {proxies}. Please install requests_kerberos first."
+                )
 
         _logger.debug(f"Requesting {self.url}")
 
