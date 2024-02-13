@@ -2,6 +2,10 @@
 Changelog
 =========
 
+Version 0.4.3
+=============
+- Included dependency on requests_kerberos_proxy in order to allow to run behind a proxy
+
 Version 0.4.2
 =============
 - Allow to switch off compression of input file

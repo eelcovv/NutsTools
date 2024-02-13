@@ -8,9 +8,9 @@ import pandas as pd
 import requests
 
 try:
-    import requests_kerberos as rk
+    import requests_kerberos_proxy
 except ImportError:
-    requests_kerberos = None
+    requests_kerberos_proxy = None
 
 import yaml
 from urllib3.util import parse_url
@@ -25,18 +25,6 @@ from .nutsdata import (
 )
 
 _logger = logging.getLogger(__name__)
-
-
-class HTTPAdapterWithProxyKerberosAuth(requests.adapters.HTTPAdapter):
-    @staticmethod
-    def proxy_headers(proxy):
-        headers = {}
-        auth = rk.HTTPKerberosAuth()
-        negotiate_details = auth.generate_request_header(
-            None, parse_url(proxy).host, is_preemptive=True
-        )
-        headers["Proxy-Authorization"] = negotiate_details
-        return headers
 
 
 class NutsPostalCode:
@@ -71,7 +59,6 @@ class NutsPostalCode:
         _logger.debug(f"Done")
 
     def postal2nuts(self, postal_codes: type(pd.Series), level=3):
-
         postal_codes = postal_codes.str.replace("\s", "", regex=True)
 
         nuts_codes = self.nuts_data.reindex(postal_codes)
@@ -91,13 +78,12 @@ class NutsPostalCode:
 
 class NutsData:
     def __init__(
-            self,
-            year: str = None,
-            country: str = None,
-            nuts_code_directory: str = None,
-            update_settings: bool = False,
+        self,
+        year: str = None,
+        country: str = None,
+        nuts_code_directory: str = None,
+        update_settings: bool = False,
     ):
-
         if nuts_code_directory is None:
             self.directory = Path(
                 appdirs.user_config_dir(NUTS_CODE_DEFAULT_DIRECTORY)
@@ -152,7 +138,6 @@ class NutsData:
         self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";", compression="zip")
 
     def get_nuts_settings(self):
-
         self.year = self.settings["DEFAULT_YEAR"]
         self.country = self.settings["DEFAULT_COUNTRY"]
 
@@ -178,49 +163,26 @@ class NutsData:
         self.nuts_codes_file = self.cache_directory / Path(remote_file_name)
 
     def download_nuts_codes(self):
-
         proxies = dict(
             http=os.environ.get("HTTP_PROXY"),
             https=os.environ.get("HTTPS_PROXY"),
         )
 
-        session = requests.Session()
-
-        if proxies:
-            session.proxies = proxies
-            _logger.debug(
-                f"Adding kerberos authentication to session for proxy {proxies}"
-            )
-            if requests_kerberos is not None:
-                http_adapter_with_proxy_kerberos_auth = HTTPAdapterWithProxyKerberosAuth()
-                session.mount("https://", http_adapter_with_proxy_kerberos_auth)
-            else:
-                _logger.warning(
-                    f"Cannot mound kerberos for proxy {proxies}. Please install requests_kerberos first."
-                )
+        if requests_kerberos_proxy is not None:
+            _logger.debug("Trying to connection using Kerberos and potentially a proxy")
+            session = requests_kerberos_proxy.util.get_session(proxies=proxies)
+        else:
+            _logger.debug("Trying to connection using plain requests")
+            session = requests.Session()
 
         _logger.debug(f"Requesting {self.url}")
+        request = session.get(self.url)
 
-        try:
-            request = session.get(self.url)
-        except requests.exceptions.ProxyError as err:
-            _logger.warning(err)
-            _logger.warning(
-                "Use kerberos authentication with --kerberos option if you are using webproxy"
-            )
-        except rk.exceptions.KerberosExchangeError as err:
-            _logger.warning(err)
-            _logger.warning(
-                "Perhaps turn off kerberos with --no_kerberos option if you are using beproxy"
-            )
+        if request.status_code == 200:
+            _logger.debug(f"Url exists : {self.url}.")
+            _logger.info(f"Downloading data from : {self.url}.")
+            with open(self.nuts_codes_file, "wb") as stream:
+                stream.write(request.content)
+            _logger.info(f"Success!")
         else:
-            _logger.debug(f"request: {request}")
-
-            if request.status_code == 200:
-                _logger.debug(f"Url exists : {self.url}.")
-                _logger.info(f"Downloading data from : {self.url}.")
-                with open(self.nuts_codes_file, "wb") as stream:
-                    stream.write(request.content)
-                _logger.info(f"Success!")
-            else:
-                _logger.warning(f"Cannot fine data set: {self.url}")
+            _logger.warning(f"Cannot fine data set: {self.url}")
