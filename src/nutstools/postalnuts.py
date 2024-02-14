@@ -81,6 +81,7 @@ class NutsData:
         self,
         year: str = None,
         country: str = None,
+        nuts_file_name: Union[Path, str] = None,
         nuts_code_directory: str = None,
         update_settings: bool = False,
     ):
@@ -130,12 +131,20 @@ class NutsData:
 
         self.get_nuts_settings()
 
+        if nuts_file_name is not None:
+            nuts_file_name = Path(nuts_file_name)
+            if nuts_file_name.exists():
+                self.nuts_codes_file = nuts_file_name
+
         if not self.nuts_codes_file.exists():
             self.download_nuts_codes()
         else:
             _logger.info(f"File {self.nuts_codes_file} already downloaded!")
 
-        self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";", compression="zip")
+        if self.nuts_codes_file.suffix == ".zip":
+            self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";", compression="zip")
+        else:
+            self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";")
 
     def get_nuts_settings(self):
         self.year = self.settings["DEFAULT_YEAR"]
@@ -168,7 +177,7 @@ class NutsData:
             https=os.environ.get("HTTPS_PROXY"),
         )
 
-        if requests_kerberos_proxy is not None:
+        if proxies and requests_kerberos_proxy is not None:
             _logger.debug("Trying to connection using Kerberos and potentially a proxy")
             session = requests_kerberos_proxy.util.get_session(proxies=proxies)
         else:

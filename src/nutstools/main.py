@@ -69,6 +69,12 @@ def parse_args(args):
         metavar="INPUT_FILE_NAME",
     )
     parser.add_argument(
+        "--nuts_file_name",
+        help="Overrule input filename with the NUTS translation data",
+        type=str,
+        metavar="NUTS_INPUT_FILE_NAME",
+    )
+    parser.add_argument(
         "-o",
         "--output_file_name",
         help="Output file with Postal codes and NUTS",
@@ -164,6 +170,7 @@ def main(args):
     nuts_dl = postalnuts.NutsData(
         year=args.year,
         country=args.country,
+        nuts_file_name=args.nuts_file_name,
         nuts_code_directory=args.directory,
         update_settings=args.update_settings,
     )
@@ -177,6 +184,12 @@ def main(args):
     else:
         postal_codes = pd.DataFrame(data=args.postal_code, columns=["CODES"])
         output_file_name = None
+
+    if args.output_file_name is not None:
+        if args.output_file_name == "-":
+            output_file_name = None
+        else:
+            output_file_name = Path(args.output_file_name)
 
     first_column_name = postal_codes.columns[0]
 
@@ -193,7 +206,7 @@ def main(args):
         _logger.info(f"Writing nuts codes to {output_file_name}")
         nuts_codes.to_csv(output_file_name)
     else:
-        print(nuts_codes)
+        print(nuts_codes.to_string())
 
     _logger.info("Script ends here")
 
