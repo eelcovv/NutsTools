@@ -2,9 +2,10 @@
 Changelog
 =========
 
-Version 0.4.3
+Version 0.4.4
 =============
 - Included dependency on requests_kerberos_proxy in order to allow to run behind a proxy
+- Added some unit test
 
 Version 0.4.2
 =============

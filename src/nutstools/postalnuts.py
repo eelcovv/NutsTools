@@ -13,7 +13,6 @@ except ImportError:
     requests_kerberos_proxy = None
 
 import yaml
-from urllib3.util import parse_url
 
 from .nutsdata import (
     COUNTRY_CODES,
@@ -142,7 +141,9 @@ class NutsData:
             _logger.info(f"File {self.nuts_codes_file} already downloaded!")
 
         if self.nuts_codes_file.suffix == ".zip":
-            self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";", compression="zip")
+            self.nuts_data = pd.read_csv(
+                self.nuts_codes_file, sep=";", compression="zip"
+            )
         else:
             self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";")
 
