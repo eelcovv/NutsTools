@@ -55,3 +55,4 @@ MANIFEST
 examples/*.csv
 /install_exe.ps1
 /tests/nutstools
+/tests/Cache
