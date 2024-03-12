@@ -1,4 +1,5 @@
 NUTS_CODE_DEFAULT_DIRECTORY = "nutstools"
+NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME = "nutstools_settings.yml"
 
 NUTS_DATA = {
     "2021": {

@@ -1,4 +1,4 @@
-# Temporary and binary files
+ Temporary and binary files
 *~
 *.py[cod]
 *.so
@@ -54,3 +54,4 @@ MANIFEST
 .python-version
 examples/*.csv
 /install_exe.ps1
+/tests/nutstools

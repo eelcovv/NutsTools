@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from pathlib import Path
 from typing import Union
 
@@ -21,19 +22,25 @@ from .nutsdata import (
     NUTS_YEARS,
     NUTS_DATA,
     NUTS_CODE_DEFAULT_DIRECTORY,
+    NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME,
 )
+
+from ._typings import SeriesLike, PathLike
 
 _logger = logging.getLogger(__name__)
 
 
 class NutsPostalCode:
+    """
+    Class to hold the postal nuts code
+
+    Parameters
+    ----------
+    file_name : PathLike
+        Filename of the nuts input file holding all the nuts codes
+    """
+
     def __init__(self, file_name: Union[object, str]):
-        """
-        Parameters
-        ----------
-        file_name : object
-            Filename of the nuts input file
-        """
         self.file_name = Path(file_name)
 
         _logger.info(f"Reading data {file_name}")
@@ -57,11 +64,28 @@ class NutsPostalCode:
         ]
         _logger.debug(f"Done")
 
-    def postal2nuts(self, postal_codes: type(pd.Series), level=3):
+    def postal2nuts(self, postal_codes: SeriesLike, level: int = 3):
+        """
+        Convert the series of postal code in a data frame to a series of nuts code at level
+
+        Args:
+            postal_codes: DataFrame or Series
+            level: int
+                Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
+
+        Returns:
+            DataFrame with the converted NUTS codes
+        """
+
+        if isinstance(postal_codes, list):
+            # turn list into Series
+            postal_codes = pd.Series(postal_codes)
+
         postal_codes = postal_codes.str.replace("\s", "", regex=True)
 
         nuts_codes = self.nuts_data.reindex(postal_codes)
 
+        # in case a nuts level lower than 3 is given, remove the last digits
         if level == 2:
             nuts_codes = nuts_codes.str.replace(".$", "", regex=True)
             nuts_codes = nuts_codes.rename("NUTS2")
@@ -73,6 +97,43 @@ class NutsPostalCode:
             nuts_codes = nuts_codes.rename("NUTS0")
 
         return nuts_codes
+
+    def one_postal2nuts(self, postal_code: str, level: int = 3):
+        """
+        Return the NUTS code for a single postal code
+
+        Args:
+            postal_code: str
+                The postal code to retrieve the data for
+            level: int
+                The nuts level
+
+        Returns:
+            str:
+                The nuts code belonging to the postal code
+        """
+
+        try:
+            postal_code = postal_code.replace(" ", "")
+        except AttributeError:
+            raise AttributeError(f"Postal code {postal_code} is not a string. Please check your input")
+        else:
+            postal_code = postal_code.upper()
+
+        try:
+            nuts_code = self.nuts_data.loc[postal_code]
+        except KeyError:
+            raise KeyError(f"Could not find NUTS code for postal code {postal_code}")
+
+        # in case a nuts level lower than 3 is given, remove the last digits
+        if level == 2:
+            nuts_code = nuts_code.replace(".$", "", regex=True)
+        elif level == 1:
+            nuts_code = nuts_code.replace("..$", "", regex=True)
+        elif level == 0:
+            nuts_code = nuts_code.replace("...$", "", regex=True)
+
+        return nuts_code
 
 
 class NutsData:
@@ -96,7 +157,7 @@ class NutsData:
         self.directory.mkdir(exist_ok=True, parents=True)
         self.cache_directory.mkdir(exist_ok=True, parents=True)
 
-        self.settings_file_name = self.directory / Path("nutstools_settings.yml")
+        self.settings_file_name = self.directory / Path(NUTS_CODE_DEFAULT_DIRECTORY)
 
         if year is not None:
             self.year = year
