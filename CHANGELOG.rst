@@ -2,6 +2,10 @@
 Changelog
 =========
 
+Version 0.4.5
+=============
+- Added correct project links and links to readthedocs
+
 Version 0.4.4
 =============
 - Included dependency on requests_kerberos_proxy in order to allow to run behind a proxy
