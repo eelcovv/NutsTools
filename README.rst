@@ -42,12 +42,70 @@ So the nuts3 code belong to the postal code *2612AB* is *NL333*.
 Python API
 ----------
 
-The NUTS conversion can also be down in your own Python code by initialising the class::
+The NUTS conversion can also be used in your own Python code. As an example,
+this initialises the default file location (in local cache)
+and it downloads the file from the eurostat website::
 
-    import NutsPostalCode
+    from nutstools.postalnuts import NutsPostalCode, NutsData
 
-    nuts = NutsPostalCode()
-    nuts_code = nuts.one_postal2nuts(postal_code="")
+    nuts_data = NutsData()
+
+At this point the NUTS data file has been downloaded from the Eurostat website
+and stored in the default location. You can not create an object with the nuts data::
+
+    nuts = NutsPostalCode(nuts_data.nuts_codes_file)
+
+The Nuts translation are stored in the *nuts.nuts_data* attribute. At this point you
+can get a nuts code for a specific postal with as::
+
+    post_code = "2612AB"
+    nuts_code = nuts.one_postal2nuts(postal_code=post_code)
+    print(f"Postal code {post_code} has nuts code {nuts_code}")
+
+Which yields the output::
+
+    Postal code 2612AB has nuts code NL333
+
+Conversion of a list of postal code is also possible as::
+
+    postal_codes = [
+        "8277 AM",
+        "2871 KA",
+        "9408 BJ",
+        "3076 KA",
+        "3068 LM",
+        "7543 GV",
+        "4181 DG",
+    ]
+
+    all_codes = nuts.postal2nuts(postal_codes=postal_codes)
+
+giving as output::
+
+    8277AM    NL211
+    2871KA    NL33B
+    9408BJ    NL131
+    3076KA    NL33C
+    3068LM    NL33C
+    7543GV    NL213
+    4181DG    NL224
+    Name: NUTS3, dtype: object
+
+The same can be done for NUTS level 1::
+
+    all_codes = nuts.postal2nuts(postal_codes=postal_codes, level=1)
+
+which gives the following output::
+
+    8277AM    NL2
+    2871KA    NL3
+    9408BJ    NL1
+    3076KA    NL3
+    3068LM    NL3
+    7543GV    NL2
+    4181DG    NL2
+    Name: NUTS1, dtype: object
+
 
 Default Settings
 ----------------

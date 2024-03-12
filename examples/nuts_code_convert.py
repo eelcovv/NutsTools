@@ -1,4 +1,3 @@
-import pandas as pd
 from nutstools.postalnuts import NutsPostalCode, NutsData
 
 # This initialises the default file location (in local cache) + downloads the file from the eurostat website
@@ -24,3 +23,10 @@ postal_codes = [
 ]
 
 all_codes = nuts.postal2nuts(postal_codes=postal_codes)
+print("\nNUTS code at level 3:")
+print(all_codes)
+
+# doing the same for nuts level 1 gives
+all_codes = nuts.postal2nuts(postal_codes=postal_codes, level=1)
+print("\nNUTS code at level 1:")
+print(all_codes)
