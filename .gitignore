@@ -56,3 +56,6 @@ examples/*.csv
 /install_exe.ps1
 /tests/nutstools
 /tests/Cache
+/tests/nutstools_settings.yml
+/nutstools_settings.yml
+/Cache/pc2020_NL_NUTS-2021_v2.0.zip

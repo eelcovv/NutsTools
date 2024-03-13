@@ -20,7 +20,7 @@ def test_main_one_postalcode(capsys):
         ]
     )
     captured = capsys.readouterr()
-    assert "NL211" in captured.out
+    assert captured.out == "8277AM    NL211\n"
 
 
 def test_main_input_file(capsys):
