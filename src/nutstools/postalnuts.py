@@ -158,7 +158,7 @@ class NutsData:
 
     Attributes:
         directory (Path): location of the configuration settings file. Defaults to:
-            *C:\\Users\\username\\AppData\\Local\\nutstools* (Windows) or */home/username/.local/share* (linux)
+            *C:/Users/username/AppData/Local/nutstools* (Windows) or */home/username/.local/share* (linux)
         cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to *Cache* relative
             the *directory*  .
         settings_file_name (Path): Name of the settings file to store the default settings. Defaults to
