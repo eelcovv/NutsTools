@@ -3,8 +3,8 @@
 # under `install_requires` in `setup.cfg` is also listed here!
 importlib-metadata
 appdirs
-requests-kerberos-proxy
 pyarrow
+requests
 pandas
 pyyaml
 sphinx>=3.2.1
