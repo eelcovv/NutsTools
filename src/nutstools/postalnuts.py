@@ -21,6 +21,7 @@ from .nutsdata import (
     NUTS_YEARS,
     NUTS_DATA,
     NUTS_CODE_DEFAULT_DIRECTORY,
+    NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME,
 )
 
 from ._typings import SeriesLike
@@ -157,7 +158,7 @@ class NutsData:
         self.directory.mkdir(exist_ok=True, parents=True)
         self.cache_directory.mkdir(exist_ok=True, parents=True)
 
-        self.settings_file_name = self.directory / Path(NUTS_CODE_DEFAULT_DIRECTORY)
+        self.settings_file_name = self.directory / Path(NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME)
 
         if year is not None:
             self.year = year

@@ -109,13 +109,11 @@ def parse_args(args):
         "--year",
         help="The year of the NUTS files",
         choices=NUTS_YEARS,
-        default=DEFAULT_YEAR,
     )
     parser.add_argument(
         "--country",
         help="The country code for the NUTS file ",
         choices=COUNTRY_CODES,
-        default=DEFAULT_COUNTRY,
     )
     parser.add_argument(
         "--update_settings",
@@ -206,7 +204,10 @@ def main(args):
         _logger.info(f"Writing nuts codes to {output_file_name}")
         nuts_codes.to_csv(output_file_name)
     else:
-        print(nuts_codes.to_string())
+        if nuts_codes.index.size > 1:
+            print(nuts_codes.to_string())
+        else:
+            print(nuts_codes.values[0])
 
     _logger.info("Script ends here")
 
