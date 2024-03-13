@@ -22,8 +22,8 @@ sphinx:
 #formats:
 #  - pdf
 #
-#python:
-#  version: "3.11"
-#  install:
-#    - requirements: docs/requirements.txt
-#    - {path: ., method: pip}
+python:
+  version: "3.11"
+  install:
+    - requirements: docs/requirements.txt
+    - {path: ., method: pip}
