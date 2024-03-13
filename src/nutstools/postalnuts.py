@@ -8,7 +8,7 @@ import pandas as pd
 import requests
 
 try:
-    import requests_kerberos_proxy
+    from requests_kerberos_proxy.util import get_session
 except ImportError:
     requests_kerberos_proxy = None
 
@@ -33,6 +33,9 @@ class NutsPostalCode:
     """
     Class to hold the postal nuts code
 
+    Args:
+        file_name (PathLike): The nuts input file holding all the nuts codes. Can be either a pathlib Path or a string.
+
     Attributes:
         file_name (Path): Path of the file contains the nuts code downloaded from the Eurostat website
         nuts_data (DataFrame): All the nuts data loaded from the file
@@ -41,12 +44,9 @@ class NutsPostalCode:
             data file
     """
 
-    def __init__(self, file_name: Union[object, str]):
+    def __init__(self, file_name: PathLike):
         """
         The constructor to initialize the object
-
-        Args:
-            file_name: The nuts input file holding all the nuts codes
         """
         self.file_name = Path(file_name)
 
@@ -148,6 +148,32 @@ class NutsPostalCode:
 class NutsData:
     """
     Class to hold all the references to NUTS data
+
+    Args:
+        year (str): Year of the NUTS data
+        country (str): Two-letter code of the country to use for the NUTS data
+        nuts_file_name (PathLike): Name of the file of the downloaded nuts data
+        nuts_code_directory (PathLike): Name of the directory where the NUTS data is stored
+        update_settings (bool): If true, the settings file is updated.
+
+    Attributes:
+        directory (Path): location of the configuration settings file. Defaults to:
+            *C:\\Users\\username\\AppData\\Local\\nutstools* (Windows) or */home/username/.local/share* (linux)
+        cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to *Cache* relative
+            the *directory*  .
+        settings_file_name (Path): Name of the settings file to store the default settings. Defaults to
+            *nutstools_settings.yml* located in *directory*.
+            This file is created the first run and read every next run. Altering the values in this file  alters the
+            default behaviour. The default behaviour can also be overwritten by using the *update_settings* command line
+            argument
+        url (str): The URL to the NUTS data at the EU website. Is stored in the settings file and can be altered there.
+        year (str): The year for which the NUTS data is retrieved. Defaults to '2021' (current latest version), but
+            can be altered in the settings file.
+        country (str): Two-letter code to set the country for which we want to download the NUTS data. Defaults to
+            'NL'. Can be altered using the *country* command line option combined with *update_settings* in order
+            to force to rewrite the settings file
+        nuts_codes_file (PathLike): The filename to the NUTS data downloaded from the EU website
+        nuts_data (DataFrame): The Dataframe where the NUTS data is stored after reading the *nuts_codes_file*
     """
 
     def __init__(
@@ -159,16 +185,6 @@ class NutsData:
         update_settings: bool = False,
         force_download: bool = False,
     ):
-        """
-        Constructor for NutsData
-
-        Args:
-            year (str): Year of the NUTS data
-            country (str): Two-letter code of the country to use for the NUTS data
-            nuts_file_name (PathLike): Name of the file of the downloaded nuts data
-            nuts_code_directory (PathLike): Name of the directory where the NUTS data is stored
-            update_settings (bool): If true, the settings file is updated.
-        """
         if nuts_code_directory is None:
             self.directory = Path(
                 appdirs.user_config_dir(NUTS_CODE_DEFAULT_DIRECTORY)
@@ -238,8 +254,6 @@ class NutsData:
     def get_nuts_settings(self):
         """
         Read the settings of the tool from the stored settings file
-
-        Returns None
         """
 
         self.year = self.settings["DEFAULT_YEAR"]
@@ -275,13 +289,9 @@ class NutsData:
         * Open a session, either via kerberos and a proxy or via a normal request session
 
         Returns:
-            int:
-                status code of the request
+            bool: True for success, False for failed download.
         """
         if requests_kerberos_proxy is not None:
-            _logger.debug("Trying to connection using Kerberos and potentially a proxy")
-            from requests_kerberos_proxy.util import get_session
-
             session = get_session()
         else:
             _logger.debug("Trying to connection using plain requests")
@@ -290,13 +300,16 @@ class NutsData:
         _logger.debug(f"Requesting {self.url}")
         request = session.get(self.url)
 
+        success = False
+
         if request.ok:
             _logger.debug(f"Url exists : {self.url}.")
             _logger.info(f"Downloading data from : {self.url}.")
             with open(self.nuts_codes_file, "wb") as stream:
                 stream.write(request.content)
             _logger.info(f"Success!")
+            success = True
         else:
             _logger.warning(f"Cannot fine data set: {self.url}")
 
-        return request.status_code
+        return success
