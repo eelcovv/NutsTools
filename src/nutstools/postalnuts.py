@@ -240,7 +240,7 @@ class NutsData:
             https=os.environ.get("HTTPS_PROXY"),
         )
 
-        if proxies and requests_kerberos_proxy is not None:
+        if requests_kerberos_proxy is not None:
             _logger.debug("Trying to connection using Kerberos and potentially a proxy")
             session = requests_kerberos_proxy.util.get_session(proxies=proxies)
         else:
