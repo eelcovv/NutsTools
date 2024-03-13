@@ -2,10 +2,12 @@
 Changelog
 =========
 
-Version 0.5.0
+Version 0.5.1
 =============
 - Added correct project links and links to readthedocs
 - Extended readme for read the docs documentation
+- Improved unit tests
+
 
 Version 0.4.4
 =============
