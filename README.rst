@@ -2,14 +2,18 @@
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
 
-|
-
 =========
 NutsTools
 =========
 
 
     Convert postal codes to NUTS codes
+
+EU NUTS (an abbreviation for Nomenclature of Territorial Units for Statistics) codes are standardized codes used by the
+European Union to define administrative and statistical regions for the purpose of data collection and analysis.
+
+The translation between Postal codes of home addresses and de NUTS code is given at the EU website. This tools
+is an  Python interface to easily obtain the code lists and transform postal codes into NUTS codes.
 
 ------------
 Installation
@@ -51,11 +55,11 @@ and it downloads the file from the eurostat website::
     nuts_data = NutsData()
 
 At this point the NUTS data file has been downloaded from the Eurostat website
-and stored in the default location. You can not create an object with the nuts data::
+and stored in the default location. You can now create an object with the nuts data::
 
     nuts = NutsPostalCode(nuts_data.nuts_codes_file)
 
-The Nuts translation are stored in the *nuts.nuts_data* attribute. At this point you
+The Nuts translation are stored at the same location in the file the *nuts.nuts_data* attribute. At this point you
 can get a nuts code for a specific postal with as::
 
     post_code = "2612AB"
@@ -138,6 +142,8 @@ The contents of the settings file look like::
 After running the code for the first time, the NUTS data file can be found in the *Cache* directory
 at the same location. The next time the tool is run, the Cached files are used instead of downloading the
 file again.
+
+In case you want to alter the default choices, you can just modify the settings file to your needs.
 
 Note
 ====

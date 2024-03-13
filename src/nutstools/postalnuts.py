@@ -1,6 +1,5 @@
 import logging
 import os
-import re
 from pathlib import Path
 from typing import Union
 
@@ -22,10 +21,9 @@ from .nutsdata import (
     NUTS_YEARS,
     NUTS_DATA,
     NUTS_CODE_DEFAULT_DIRECTORY,
-    NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME,
 )
 
-from ._typings import SeriesLike, PathLike
+from ._typings import SeriesLike
 
 _logger = logging.getLogger(__name__)
 
@@ -116,7 +114,9 @@ class NutsPostalCode:
         try:
             postal_code = postal_code.replace(" ", "")
         except AttributeError:
-            raise AttributeError(f"Postal code {postal_code} is not a string. Please check your input")
+            raise AttributeError(
+                f"Postal code {postal_code} is not a string. Please check your input"
+            )
         else:
             postal_code = postal_code.upper()
 
