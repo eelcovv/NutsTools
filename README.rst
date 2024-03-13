@@ -78,6 +78,41 @@ gives  the following output::
 In case the output argument *-o -* i is left out, the output filename will be based on
 the input file with the suffix *nuts3*, where 3 stands for the nuts level of the output.
 
+Help message
+------------
+
+The full help  message of the tools is::
+
+    PS> postalcode2nuts.exe --help
+    usage: postalcode2nuts [-h] [--version] [-p POSTALCODE] [-i INPUT_FILE_NAME] [--nuts_file_name NUTS_INPUT_FILE_NAME]
+                           [-o OUTPUT_FILE_NAME] [-v] [-vv] [-l LEVEL] [--year {2021}]
+                           [--country {DE,SK,FI,DK,IT,LU,LI,SE,LV,TR,UK,ES,EE,HR,MK,CY,IS,AT,RO,HU,BG,BE,PL,CH,RS,IE,CZ,NL,NO,PT,SI,LT,FR,EL}]
+                           [--update_settings] [--directory DIRECTORY]
+
+    Converts a postal code to its NUTS code
+
+    options:
+      -h, --help            show this help message and exit
+      --version             show program's version number and exit
+      -p POSTALCODE, --postal_code POSTALCODE
+                            Postcode
+      -i INPUT_FILE_NAME, --input_file_name INPUT_FILE_NAME
+                            Input file with Postal codes
+      --nuts_file_name NUTS_INPUT_FILE_NAME
+                            Overrule input filename with the NUTS translation data
+      -o OUTPUT_FILE_NAME, --output_file_name OUTPUT_FILE_NAME
+                            Output file with Postal codes and NUTS
+      -v, --verbose         set loglevel to INFO
+      -vv, --debug          set loglevel to DEBUG
+      -l LEVEL, --level LEVEL
+                            The level at we want to get the NUTS-code
+      --year {2021}         The year of the NUTS files
+      --country {DE,SK,FI,DK,IT,LU,LI,SE,LV,TR,UK,ES,EE,HR,MK,CY,IS,AT,RO,HU,BG,BE,PL,CH,RS,IE,CZ,NL,NO,PT,SI,LT,FR,EL}
+                            The country code for the NUTS file
+      --update_settings     Update the settings file with the new values
+      --directory DIRECTORY
+                            The location of the the NUTS files. If not given, the default directory will be picked
+
 Python API
 ----------
 
