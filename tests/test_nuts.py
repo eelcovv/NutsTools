@@ -6,7 +6,7 @@ from pathlib import Path
 
 from nutstools.main import check_if_valid_nuts_level
 from nutstools.postalnuts import NutsPostalCode, NutsData
-from .test_nuts_command_line_tool import get_root_directory
+from test_nuts_command_line_tool import get_root_directory
 
 __author__ = "EVLT"
 __copyright__ = "EVLT"

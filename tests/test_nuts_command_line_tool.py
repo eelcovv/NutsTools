@@ -30,7 +30,7 @@ def test_main_one_postalcode(capsys):
     main(
         [
             "--nuts_file_name",
-            nuts_file,
+            nuts_file.as_posix(),
             "--postal_code",
             "8277AM",
         ]
