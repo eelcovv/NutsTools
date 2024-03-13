@@ -1,6 +1,6 @@
-========
+=========
 NutsTools
-========
+=========
 
 This is the documentation of **NutsTools**.
 
