@@ -204,10 +204,7 @@ def main(args):
         _logger.info(f"Writing nuts codes to {output_file_name}")
         nuts_codes.to_csv(output_file_name)
     else:
-        if nuts_codes.index.size > 1:
-            print(nuts_codes.to_string())
-        else:
-            print(nuts_codes.values[0])
+        print(nuts_codes.to_string(header=False))
 
     _logger.info("Script ends here")
 

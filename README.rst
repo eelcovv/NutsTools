@@ -37,9 +37,7 @@ Run the following to get the nuts belong by the postal code 2612AB::
 
 This yields the following output::
 
-    CODES
     2612AB    NL333
-    Name: NUTS3, dtype: object
 
 So the nuts3 code belong to the postal code *2612AB* is *NL333*.
 
