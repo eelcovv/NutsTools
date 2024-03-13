@@ -2,7 +2,7 @@
 Changelog
 =========
 
-Version 0.5.1
+Version 0.5.2
 =============
 - Added correct project links and links to readthedocs
 - Extended readme for read the docs documentation
