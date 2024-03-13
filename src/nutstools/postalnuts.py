@@ -24,7 +24,7 @@ from .nutsdata import (
     NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME,
 )
 
-from ._typings import SeriesLike
+from ._typings import SeriesLike, PathLike
 
 _logger = logging.getLogger(__name__)
 
@@ -33,13 +33,21 @@ class NutsPostalCode:
     """
     Class to hold the postal nuts code
 
-    Parameters
-    ----------
-    file_name : PathLike
-        Filename of the nuts input file holding all the nuts codes
+    Attributes:
+        file_name (Path): Path of the file contains the nuts code downloaded from the Eurostat website
+        nuts_data (DataFrame): All the nuts data loaded from the file
+        nuts_key (str): Name of column containing the NUTS codes. Equal to the first column of the input data file
+        postal_codes_key (str): Name of the column containing the postal codes. Equal to the second column of the input
+            data file
     """
 
     def __init__(self, file_name: Union[object, str]):
+        """
+        The constructor to initialize the object
+
+        Args:
+            file_name: The nuts input file holding all the nuts codes
+        """
         self.file_name = Path(file_name)
 
         _logger.info(f"Reading data {file_name}")
@@ -65,7 +73,7 @@ class NutsPostalCode:
 
     def postal2nuts(self, postal_codes: SeriesLike, level: int = 3):
         """
-        Convert the series of postal code in a data frame to a series of nuts code at level
+        Convert the series or list of postal codes to a series of nuts code at level
 
         Args:
             postal_codes: DataFrame or Series
@@ -73,7 +81,7 @@ class NutsPostalCode:
                 Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
 
         Returns:
-            DataFrame with the converted NUTS codes
+            Series with the converted NUTS codes
         """
 
         if isinstance(postal_codes, list):
@@ -138,6 +146,10 @@ class NutsPostalCode:
 
 
 class NutsData:
+    """
+    Class to hold all the references to NUTS data
+    """
+
     def __init__(
         self,
         year: str = None,
@@ -145,7 +157,18 @@ class NutsData:
         nuts_file_name: Union[Path, str] = None,
         nuts_code_directory: str = None,
         update_settings: bool = False,
+        force_download: bool = False,
     ):
+        """
+        Constructor for NutsData
+
+        Args:
+            year (str): Year of the NUTS data
+            country (str): Two-letter code of the country to use for the NUTS data
+            nuts_file_name (PathLike): Name of the file of the downloaded nuts data
+            nuts_code_directory (PathLike): Name of the directory where the NUTS data is stored
+            update_settings (bool): If true, the settings file is updated.
+        """
         if nuts_code_directory is None:
             self.directory = Path(
                 appdirs.user_config_dir(NUTS_CODE_DEFAULT_DIRECTORY)
@@ -158,7 +181,10 @@ class NutsData:
         self.directory.mkdir(exist_ok=True, parents=True)
         self.cache_directory.mkdir(exist_ok=True, parents=True)
 
-        self.settings_file_name = self.directory / Path(NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME)
+        self.settings_file_name = self.directory / Path(
+            NUTS_CODE_DEFAULT_SETTINGS_FILE_NAME
+        )
+        self.url = None
 
         if year is not None:
             self.year = year
@@ -197,7 +223,7 @@ class NutsData:
             if nuts_file_name.exists():
                 self.nuts_codes_file = nuts_file_name
 
-        if not self.nuts_codes_file.exists():
+        if not self.nuts_codes_file.exists() or force_download:
             self.download_nuts_codes()
         else:
             _logger.info(f"File {self.nuts_codes_file} already downloaded!")
@@ -210,6 +236,12 @@ class NutsData:
             self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";")
 
     def get_nuts_settings(self):
+        """
+        Read the settings of the tool from the stored settings file
+
+        Returns None
+        """
+
         self.year = self.settings["DEFAULT_YEAR"]
         self.country = self.settings["DEFAULT_COUNTRY"]
 
@@ -235,14 +267,22 @@ class NutsData:
         self.nuts_codes_file = self.cache_directory / Path(remote_file_name)
 
     def download_nuts_codes(self):
-        proxies = dict(
-            http=os.environ.get("HTTP_PROXY"),
-            https=os.environ.get("HTTPS_PROXY"),
-        )
+        """
+        Download the NUTS data from the EU website
 
+        Notes
+        -----
+        * Open a session, either via kerberos and a proxy or via a normal request session
+
+        Returns:
+            int:
+                status code of the request
+        """
         if requests_kerberos_proxy is not None:
             _logger.debug("Trying to connection using Kerberos and potentially a proxy")
-            session = requests_kerberos_proxy.util.get_session(proxies=proxies)
+            from requests_kerberos_proxy.util import get_session
+
+            session = get_session()
         else:
             _logger.debug("Trying to connection using plain requests")
             session = requests.Session()
@@ -250,7 +290,7 @@ class NutsData:
         _logger.debug(f"Requesting {self.url}")
         request = session.get(self.url)
 
-        if request.status_code == 200:
+        if request.ok:
             _logger.debug(f"Url exists : {self.url}.")
             _logger.info(f"Downloading data from : {self.url}.")
             with open(self.nuts_codes_file, "wb") as stream:
@@ -258,3 +298,5 @@ class NutsData:
             _logger.info(f"Success!")
         else:
             _logger.warning(f"Cannot fine data set: {self.url}")
+
+        return request.status_code

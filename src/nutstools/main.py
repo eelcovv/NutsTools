@@ -121,6 +121,11 @@ def parse_args(args):
         action="store_true",
     )
     parser.add_argument(
+        "--force_download",
+        help="Forces to download the datafile again, even if it already exists",
+        action="store_true",
+    )
+    parser.add_argument(
         "--directory",
         help="The location of the  the NUTS files. If not given, the default directory will be picked ",
     )
@@ -171,6 +176,7 @@ def main(args):
         nuts_file_name=args.nuts_file_name,
         nuts_code_directory=args.directory,
         update_settings=args.update_settings,
+        force_download=args.force_download,
     )
 
     if args.input_file_name is not None:
