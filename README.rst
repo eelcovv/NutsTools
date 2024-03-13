@@ -28,11 +28,11 @@ In case you are behind a proxy which requires authentication you may want to ins
 
     pip install requests-kerberos-proxy
 
- or, alternatively, install the nutstools package as::
+or, alternatively, install the nutstools package as::
 
     pip install nutstools[proxy]
 
- which will automatically include the required proxy packages
+which will automatically include the required proxy packages
 
 -----
 Usage
