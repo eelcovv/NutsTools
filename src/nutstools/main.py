@@ -47,7 +47,7 @@ def parse_args(args):
     Returns:
       :obj:`argparse.Namespace`: command line parameters namespace
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = argparse.ArgumentParser(description="Converts a postal code to its NUTS code")
     parser.add_argument(
         "--version",
         action="version",

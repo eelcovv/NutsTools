@@ -52,6 +52,32 @@ This yields the following output::
 
 So the nuts3 code belong to the postal code *2612AB* is *NL333*.
 
+It is also possible to convert the postal codes stored in a file using the -i option.
+In case your file with the name *postal_codes.txt* contains the following::
+
+    '8277 AM'
+    '2871 KA'
+    '9408 BJ'
+    '3076 KA'
+    '3068 LM'
+    '7543 GV'
+
+Running the following::
+
+    >> postalcode2nuts.exe -i postal_codes.txt -o -
+
+gives  the following output::
+
+    8277AM    NL211
+    2871KA    NL33B
+    9408BJ    NL131
+    3076KA    NL33C
+    3068LM    NL33C
+    7543GV    NL213
+
+In case the output argument *-o -* i is left out, the output filename will be based on
+the input file with the suffix *nuts3*, where 3 stands for the nuts level of the output.
+
 Python API
 ----------
 
