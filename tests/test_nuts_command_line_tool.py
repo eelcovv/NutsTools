@@ -7,14 +7,30 @@ __copyright__ = "EVLT"
 __license__ = "MIT"
 
 
+def get_root_directory():
+    """small utility to get the root directory from which pytests is launched"""
+    current_directory = Path(".").cwd().name
+    if current_directory == "tests":
+        # we are inside the tests-directory. Move one up
+        root_directory = Path("..")
+    else:
+        # we are in the root directory
+        root_directory = Path(".")
+    return root_directory
+
+
 def test_main_one_postalcode(capsys):
     """CLI Tests"""
     # capsys is a pytest fixture that allows asserts against stdout/stderr
     # https://docs.pytest.org/en/stable/capture.html
+
+    root = get_root_directory()
+    nuts_file = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
+
     main(
         [
             "--nuts_file_name",
-            "pc2020_NL_NUTS-2021_v2.0_selection.csv",
+            nuts_file,
             "--postal_code",
             "8277AM",
         ]
@@ -27,16 +43,10 @@ def test_main_input_file(capsys):
     """CLI Tests"""
     # capsys is a pytest fixture that allows asserts against stdout/stderr
     # https://docs.pytest.org/en/stable/capture.html
-    examples_directory = Path("examples")
-    postal_codes = examples_directory / Path("postal_codes.txt")
-    postal_codes_expected = Path("postal_codes_expected.txt")
+    root = get_root_directory()
 
-    if not examples_directory.exists():
-        # if we run from the tests directory, move one directory up for the examples data
-        postal_codes = Path("..") / postal_codes
-    else:
-        # if we run from the root directory, move into tests to get the expected data
-        postal_codes_expected = Path("tests") / postal_codes_expected
+    postal_codes = root / Path("examples/postal_codes.txt")
+    postal_codes_expected = root / Path("tests/postal_codes_expected.txt")
 
     main(
         [

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from nutstools.main import check_if_valid_nuts_level
 from nutstools.postalnuts import NutsPostalCode, NutsData
+from .test_nuts_command_line_tool import get_root_directory
 
 __author__ = "EVLT"
 __copyright__ = "EVLT"
@@ -36,7 +37,9 @@ def test_check_if_valid_nuts_level_four():
 
 def test_nuts_data():
     """ NutsData is used to store the default file location """
-    nuts_file_name = "pc2020_NL_NUTS-2021_v2.0_selection.csv"
+    root = get_root_directory()
+    nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
+
     nuts_dl = NutsData(
         nuts_code_directory=".",
         nuts_file_name=nuts_file_name,
@@ -48,7 +51,9 @@ def test_nuts_data():
 
 def test_nuts_postcode():
     """ NutsData is used to store the default file location """
-    nuts_file_name = "pc2020_NL_NUTS-2021_v2.0_selection.csv"
+    root = get_root_directory()
+    nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
+
     nuts = NutsPostalCode(file_name=nuts_file_name)
 
     post_codes = ["2675BP", "5704 HG", "3344  em"]
