@@ -23,6 +23,17 @@ Install the tool by::
 
     pip install nutstools
 
+In case you are behind a proxy which requires authentication you may want to install the packages
+*requests_kerberos_proxy*. You can install it yourself with::
+
+    pip install requests-kerberos-proxy
+
+ or, alternatively, install the nutstools package as::
+
+    pip install nutstools[proxy]
+
+ which will automatically include the required proxy packages
+
 -----
 Usage
 -----
