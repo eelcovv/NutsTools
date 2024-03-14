@@ -52,6 +52,7 @@ Examples:
 
 import logging
 from pathlib import Path
+import re
 
 import appdirs
 import pandas as pd
@@ -187,15 +188,16 @@ class NutsPostalCode:
         try:
             nuts_code = self.nuts_data.loc[postal_code]
         except KeyError:
-            raise KeyError(f"Could not find NUTS code for postal code {postal_code}")
+            _logger.warning(f"Could not find NUTS code for postal code {postal_code}")
+            return None
 
         # in case a nuts level lower than 3 is given, remove the last digits
         if level == 2:
-            nuts_code = nuts_code.replace(".$", "", regex=True)
+            nuts_code = re.sub(".$", "", nuts_code)
         elif level == 1:
-            nuts_code = nuts_code.replace("..$", "", regex=True)
+            nuts_code = re.sub("..$", "", nuts_code)
         elif level == 0:
-            nuts_code = nuts_code.replace("...$", "", regex=True)
+            nuts_code = re.sub("...$", "", nuts_code)
 
         return nuts_code
 

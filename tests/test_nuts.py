@@ -60,10 +60,25 @@ def test_nuts_postcode():
     nuts = NutsPostalCode(file_name=nuts_file_name)
 
     post_codes = ["2675BP", "5704 HG", "3344  em"]
-    nuts_codes = ["NL333", "NL414", "NL33A"]
+    nuts_codes_level_3 = ["NL333", "NL414", "NL33A"]
+    nuts_codes_level_2 = ["NL33", "NL41", "NL33"]
+    nuts_codes_level_1 = ["NL3", "NL4", "NL3"]
+    nuts_codes_level_0 = ["NL", "NL", "NL"]
 
-    for postal_code, expected_code in zip(post_codes, nuts_codes):
+    for postal_code, expected_code in zip(post_codes, nuts_codes_level_3):
         nuts_code = nuts.one_postal2nuts(postal_code=postal_code)
+        assert nuts_code == expected_code
+
+    for postal_code, expected_code in zip(post_codes, nuts_codes_level_2):
+        nuts_code = nuts.one_postal2nuts(postal_code=postal_code, level=2)
+        assert nuts_code == expected_code
+
+    for postal_code, expected_code in zip(post_codes, nuts_codes_level_1):
+        nuts_code = nuts.one_postal2nuts(postal_code=postal_code, level=1)
+        assert nuts_code == expected_code
+
+    for postal_code, expected_code in zip(post_codes, nuts_codes_level_0):
+        nuts_code = nuts.one_postal2nuts(postal_code=postal_code, level=0)
         assert nuts_code == expected_code
 
     with pytest.raises(KeyError):
