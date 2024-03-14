@@ -100,6 +100,16 @@ Clone the repository
 
    to be able to import the package under development in the Python REPL.
 
+   .. todo:: if you are not using pre-commit, please remove the following item:
+
+#. Install |pre-commit|_::
+
+    pip install pre-commit
+    pre-commit install
+
+   ``NutsInfo`` comes with a lot of hooks configured to automatically help the
+   developer to check the code being written.
+
 Implement your changes
 ----------------------
 
@@ -120,6 +130,21 @@ Implement your changes
     git commit
 
    to record your changes in git_.
+
+   Please make sure to see the validation messages from |pre-commit|_ and fix
+   any eventual issues.
+   This should automatically use flake8_/black_ to check/fix the code style
+   in a way that is compatible with the project.
+
+   .. important:: Don't forget to add unit tests and documentation in case your
+      contribution adds an additional feature and is not just a bugfix.
+
+      Moreover, writing a `descriptive commit message`_ is highly recommended.
+      In case of doubt, you can check the commit history with::
+
+         git log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+      to look for recurring communication patterns.
 
 #. Please check that your changes don't break any unit tests with::
 
