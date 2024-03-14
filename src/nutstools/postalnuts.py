@@ -13,7 +13,7 @@ Examples:
     In case the NUTS data was downloaded before, only the nuts_data object is created, but the data will not be
     downloaded again.
 
-    As a nex step, you can use the NutsPostalCode class to import the NUTS-data and convert postal codes to NUTS::
+    As a next step, you can use the NutsPostalCode class to import the NUTS-data and convert postal codes to NUTS::
 
         nuts = NutsPostalCode(nuts_data.nuts_codes_file)
 
@@ -21,7 +21,9 @@ Examples:
         nuts_code = nuts.one_postal2nuts(postal_code=post_code)
         print(f"Postal code {post_code} has nuts code {nuts_code}")
 
-    The returned *nuts_code* is a string with the NUTS code, so the output looks like::
+    The returned *nuts_code* is a string with the NUTS code, so the output looks like:
+
+    .. code-block:: text
 
         Postal code 2612AB has nuts code NL333
 
@@ -35,7 +37,8 @@ Examples:
         all_codes = nuts.postal2nuts(postal_codes=postal_codes)
         print(all_codes)
 
-    The returned *all_codes* is a Series which looks like::
+    The returned *all_codes* is a Series which looks like:
+    .. code-block:: text
 
         8277AM    NL211
         2871KA    NL33B
