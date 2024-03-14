@@ -1,5 +1,45 @@
+# -*- coding: utf-8 -*-
 """
-A tool to convert postal codes to NUTS-values based on the NUTS files distributed by Eurostat
+A tool to convert postal codes to NUTS-values based on the NUTS files distributed by Eurostat.
+
+Usage:
+
+.. code-block:: text
+
+
+    PS>postalcode2nuts.exe --help
+
+    usage: postalcode2nuts [-h] [--version] [-p POSTALCODE] [-i INPUT_FILE_NAME]
+                           [--nuts_file_name NUTS_INPUT_FILE_NAME] [-o OUTPUT_FILE_NAME] [-v] [-vv] [-l LEVEL]
+                           [--year {2021}]
+                           [--country {PT,DK,SE,PL,TR,MK,NO,SI,LV,ES,CH,NL,SK,CZ,LI,EL,HR,IS,LT,UK,IT,FI,HU,CY,EE,RS,IE,
+                           RO,LU,BE,DE,FR,AT,BG}]
+                           [--update_settings] [--force_download] [--directory DIRECTORY]
+
+    Converts a postal code to its NUTS code
+
+    options:
+      -h, --help            show this help message and exit
+      --version             show program's version number and exit
+      -p POSTALCODE, --postal_code POSTALCODE
+                            Postcode
+      -i INPUT_FILE_NAME, --input_file_name INPUT_FILE_NAME
+                            Input file with Postal codes
+      --nuts_file_name NUTS_INPUT_FILE_NAME
+                            Overrule input filename with the NUTS translation data
+      -o OUTPUT_FILE_NAME, --output_file_name OUTPUT_FILE_NAME
+                            Output file with Postal codes and NUTS
+      -v, --verbose         set loglevel to INFO
+      -vv, --debug          set loglevel to DEBUG
+      -l LEVEL, --level LEVEL
+                            The level at we want to get the NUTS-code
+      --year {2021}         The year of the NUTS files
+      --country {PT,DK,SE,PL,TR,MK,NO,SI,LV,ES,CH,NL,SK,CZ,LI,EL,HR,IS,LT,UK,IT,FI,HU,CY,EE,RS,IE,RO,LU,BE,DE,FR,AT,BG}
+                            The country code for the NUTS file
+      --update_settings     Update the settings file with the new values
+      --force_download      Forces to download the datafile again, even if it already exists
+      --directory DIRECTORY
+                        The location of the the NUTS files. If not given, the default directory will be picked
 """
 
 import argparse

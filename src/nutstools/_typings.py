@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""
+Some typing definitions used in the NutsTools package
+"""
 from typing import Union, TypeAlias
 from pandas import Series, DataFrame
 from pathlib import Path

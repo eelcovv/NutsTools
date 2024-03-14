@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Basic package definition with version control
+
+"""
 import sys
 
 if sys.version_info[:2] >= (3, 8):

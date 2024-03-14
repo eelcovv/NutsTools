@@ -38,6 +38,7 @@ Examples:
         print(all_codes)
 
     The returned *all_codes* is a Series which looks like:
+
     .. code-block:: text
 
         8277AM    NL211
