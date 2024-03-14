@@ -38,11 +38,15 @@ Command line tool
 -----------------
 
 This tools can be used to convert postal codes to NUTS codes.
-Run the following to get the nuts belong by the postal code 2612AB::
+Run the following to get the nuts belong by the postal code 2612AB:
+
+.. code-block:: text
 
     >> postalcode2nuts.exe -p 2612AB
 
-This yields the following output::
+This yields the following output:
+
+.. code-block:: text
 
     2612AB    NL333
 
@@ -62,7 +66,9 @@ Running the following::
 
     >> postalcode2nuts.exe -i postal_codes.txt -o -
 
-gives  the following output::
+gives  the following output:
+
+.. code-block:: text
 
     8277AM    NL211
     2871KA    NL33B
@@ -77,7 +83,9 @@ the input file with the suffix *nuts3*, where 3 stands for the nuts level of the
 Help message
 ------------
 
-The full help  message of the tools is::
+The full help  message of the tools is:
+
+.. code-block:: text
 
     PS> postalcode2nuts.exe --help
     usage: postalcode2nuts [-h] [--version] [-p POSTALCODE] [-i INPUT_FILE_NAME] [--nuts_file_name NUTS_INPUT_FILE_NAME]
@@ -132,7 +140,9 @@ can get a nuts code for a specific postal with as::
     nuts_code = nuts.one_postal2nuts(postal_code=post_code)
     print(f"Postal code {post_code} has nuts code {nuts_code}")
 
-Which yields the output::
+Which yields the output:
+
+.. code-block:: text
 
     Postal code 2612AB has nuts code NL333
 
@@ -150,7 +160,9 @@ Conversion of a list of postal code is also possible as::
 
     all_codes = nuts.postal2nuts(postal_codes=postal_codes)
 
-giving as output::
+giving as output:
+
+.. code-block:: text
 
     8277AM    NL211
     2871KA    NL33B
@@ -165,7 +177,9 @@ The same can be done for NUTS level 1::
 
     all_codes = nuts.postal2nuts(postal_codes=postal_codes, level=1)
 
-which gives the following output::
+which gives the following output:
+
+.. code-block:: text
 
     8277AM    NL2
     2871KA    NL3
@@ -187,10 +201,28 @@ The data is stored in *C:\\Users\\MyUser\\AppData\\Local* (windows) or *.local/s
 in the directory *nutstools*. This location can be altered via the command line argument
 *--directory <location>*.
 
+The current location of the settings file can be found with:
+
+.. code-block:: text
+
+     >postalcode2nuts.exe --config_show
+
+This give the current settings file location and default settings:
+
+.. code-block:: text
+
+    Settings file : C:\Users\username\AppData\Local\nutstools\nutstools_settings.yml
+    Nuts code file: C:\Users\username\AppData\Local\nutstools\Cache\pc2020_NL_NUTS-2021_v2.0.zip
+    URL of source : https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_NL_NUTS-2021_v2.0.zip
+    Country to show: NL
+    Year of data: 2021
+
 The default settings are stored in the file *nutstools_settings.yml*. The contents of this file
 contains all the default choices, such as the default country for which the NUTS code conversion
 is applied (default is for The Netherlands using the code 'NL').
-The contents of the settings file look like::
+The contents of the settings file look like:
+
+.. code-block:: yaml
 
     COUNTRY_CODES: !!set
         <list of country codes>
@@ -210,6 +242,37 @@ at the same location. The next time the tool is run, the Cached files are used i
 file again.
 
 In case you want to alter the default choices, you can just modify the settings file to your needs.
+Alternatively, you can run your code one time with the *--update* option in order to overwrite your settings.
+For instance, to obtain the NUTS code of a Belgium Postal code you can do:
+
+.. code-block:: text
+
+    >> postalcode2nuts.exe --country BE -p 1083 --update_settings
+
+This yields the following output:
+
+.. code-block:: text
+
+    1083    BE100
+
+Note the the *--update_setting* option only needs to be given one time. This forces
+the settings file to be overwritten. The next runs, the last country will be picked.
+
+The settings file name and location can be retrieved again:
+
+.. code-block:: text
+
+     >postalcode2nuts.exe --config_show
+
+This give the current settings file location and default settings:
+
+.. code-block:: text
+
+    Settings file : C:\Users\username\AppData\Local\nutstools\nutstools_settings.yml
+    Nuts code file: C:\Users\username\AppData\Local\nutstools\Cache\pc2020_BE_NUTS-2021_v1.0.zip
+    URL of source : https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_BE_NUTS-2021_v1.0.zip
+    Country to show: BE
+    Year of data: 2021
 
 Note
 ====
