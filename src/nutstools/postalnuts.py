@@ -134,10 +134,10 @@ class NutsPostalCode:
 
         Args:
             postal_codes (DataFrame or Series): Series or list of postal codes to be converted to NUTS codes
-            level (int): Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
+            level (int, optional): Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
 
         Returns:
-            Series with the converted NUTS codes
+            Series: The converted NUTS codes. The postal codes are put on the index.
         """
 
         assert level in (0, 1, 2, 3)
@@ -169,10 +169,10 @@ class NutsPostalCode:
 
         Args:
             postal_code (str): The postal code to retrieve the data for
-            level (int): The nuts level
+            level (int, optional): The nuts level. Default = 3
 
         Returns:
-            (str) The nuts code belonging to the postal code
+            str: The nuts code belonging to the postal code
         """
 
         try:
@@ -205,11 +205,16 @@ class NutsData:
     Class to hold all the references to NUTS data
 
     Args:
-        year (str): Year of the NUTS data
-        country (str): Two-letter code of the country to use for the NUTS data
-        nuts_file_name (Path|str): Name of the file of the downloaded nuts data
-        nuts_code_directory (Path|str): Name of the directory where the NUTS data is stored
-        update_settings (bool): If true, the settings file is updated.
+        year (str, optional): Year of the NUTS data. Default is *2021*.
+        country (str, optional ): Two-letter code of the country to use for the NUTS data. Defaults to *NL*.
+        nuts_file_name (Path|str, optional): Name of the file of the downloaded nuts data. Default is
+            *nutstools_settings.yml*.
+        nuts_code_directory (Path|str, optional): Name of the directory where the NUTS data is stored.
+            Defaults to *None*, in which case the NUTS data will be stored to the default location
+            (see *directory* attribute).
+            If an alternative location is passed to this argument, the *directory* attributed is set to this location.
+        update_settings (bool, optional): If true, the settings file is updated with the new options passed to this
+            class. The defaults can also be altered in the *nuts_file_name* settings file it self.
 
     Attributes:
         directory (Path): Location of the configuration settings file. Default is *nutstools* in eiter
