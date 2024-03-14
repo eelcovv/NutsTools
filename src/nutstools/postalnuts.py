@@ -3,7 +3,6 @@
 
 import logging
 from pathlib import Path
-from typing import Union
 
 import appdirs
 import pandas as pd
@@ -36,7 +35,7 @@ class NutsPostalCode:
     Class to hold the postal nuts code
 
     Args:
-        file_name (PathLike): The nuts input file holding all the nuts codes. Can be either a pathlib Path or a string.
+        file_name (Path|str): The nuts input file holding all the nuts codes. Can be either a pathlib Path or a string.
 
     Attributes:
         file_name (Path|str): Path of the file contains the nuts code downloaded from the Eurostat website
@@ -78,13 +77,14 @@ class NutsPostalCode:
         Convert the series or list of postal codes to a series of nuts code at level
 
         Args:
-            postal_codes: DataFrame or Series
-            level: int
-                Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
+            postal_codes (DataFrame or Series): Series or list of postal codes to be converted to NUTS codes
+            level (int): Level of the nuts codes. Either, 0, 1, 2 or 3. Default is 3
 
         Returns:
             Series with the converted NUTS codes
         """
+
+        assert level in (0, 1, 2, 3)
 
         if isinstance(postal_codes, list):
             # turn list into Series
@@ -112,14 +112,11 @@ class NutsPostalCode:
         Return the NUTS code for a single postal code
 
         Args:
-            postal_code: str
-                The postal code to retrieve the data for
-            level: int
-                The nuts level
+            postal_code (str): The postal code to retrieve the data for
+            level (int): The nuts level
 
         Returns:
-            str:
-                The nuts code belonging to the postal code
+            (str) The nuts code belonging to the postal code
         """
 
         try:
@@ -154,8 +151,8 @@ class NutsData:
     Args:
         year (str): Year of the NUTS data
         country (str): Two-letter code of the country to use for the NUTS data
-        nuts_file_name (PathLike): Name of the file of the downloaded nuts data
-        nuts_code_directory (PathLike): Name of the directory where the NUTS data is stored
+        nuts_file_name (Path|str): Name of the file of the downloaded nuts data
+        nuts_code_directory (Path|str): Name of the directory where the NUTS data is stored
         update_settings (bool): If true, the settings file is updated.
 
     Attributes:
@@ -174,7 +171,7 @@ class NutsData:
         country (str): Two-letter code to set the country for which we want to download the NUTS data. Default is
             *NL*. Can be altered using the *country* command line option combined with *update_settings* in order
             to force to rewrite the settings file
-        nuts_codes_file (PathLike): The filename to the NUTS data downloaded from the EU website
+        nuts_codes_file (Path): The filename to the NUTS data downloaded from the EU website
         nuts_data (DataFrame): The Dataframe where the NUTS data is stored after reading the *nuts_codes_file*
     """
 
@@ -182,7 +179,7 @@ class NutsData:
         self,
         year: str = None,
         country: str = None,
-        nuts_file_name: Union[Path, str] = None,
+        nuts_file_name: PathLike = None,
         nuts_code_directory: str = None,
         update_settings: bool = False,
         force_download: bool = False,
