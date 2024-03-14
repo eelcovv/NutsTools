@@ -1,5 +1,7 @@
+# Class definition for NutsTools. Can be used in your own Python code to retrieve the nuts data from the EU-website
+# and convert postal codes in NUTS codes
+
 import logging
-import os
 from pathlib import Path
 from typing import Union
 
@@ -146,7 +148,7 @@ class NutsPostalCode:
 
 
 class NutsData:
-    r"""
+    """
     Class to hold all the references to NUTS data
 
     Args:
@@ -157,8 +159,8 @@ class NutsData:
         update_settings (bool): If true, the settings file is updated.
 
     Attributes:
-        directory (Path): location of the configuration settings file. Defaults to:
-            C:\Users\username\AppData\Local\nutstools (Windows) or /home/username/.local/share (linux)
+        directory (Path): Location of the configuration settings file. Defaults to
+            C:\\\\Users\\\\username\\\\AppData\\\\Local\\\\nutstools (Windows) or /home/username/.local/share (linux)
         cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to 'Cache' relative
             'directory'.
         settings_file_name (Path): Name of the settings file to store the default settings. Defaults to
