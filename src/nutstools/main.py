@@ -3,9 +3,40 @@
 A tool to convert postal codes to NUTS-values based on the NUTS files distributed by Eurostat.
 
 Usage:
+------
+
+Convert a postal code to NUTS:
 
 .. code-block:: text
 
+    > postalcode2nuts.exe --postal_code 2612AB
+    2612AB    NL333
+
+Convert the file *postal_codes.txt* with postal codes to NUTS:
+
+.. code-block:: text
+
+    >> postalcode2nuts.exe --input_file_name postal_codes.txt --output_file_name -
+
+gives  the following output::
+
+.. code-block:: text
+
+    8277AM    NL211
+    2871KA    NL33B
+    9408BJ    NL131
+    3076KA    NL33C
+    3068LM    NL33C
+    7543GV    NL213
+
+In case the *--output_file_name* argument is not given, the codes are written to file with the same name
+as the input file with a suffix nuts3 (default), where 3 standards for the level of the NUTS output.
+The level can be altered using the *--level*  option.
+
+Help:
+-----
+
+.. code-block:: text
 
     PS>postalcode2nuts.exe --help
 
