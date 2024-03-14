@@ -146,7 +146,7 @@ class NutsPostalCode:
 
 
 class NutsData:
-    """
+    r"""
     Class to hold all the references to NUTS data
 
     Args:
@@ -158,13 +158,13 @@ class NutsData:
 
     Attributes:
         directory (Path): location of the configuration settings file. Defaults to:
-            *C:/Users/username/AppData/Local/nutstools* (Windows) or */home/username/.local/share* (linux)
-        cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to *Cache* relative
-            the *directory*  .
+            C:\Users\username\AppData\Local\nutstools (Windows) or /home/username/.local/share (linux)
+        cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to 'Cache' relative
+            'directory'.
         settings_file_name (Path): Name of the settings file to store the default settings. Defaults to
-            *nutstools_settings.yml* located in *directory*.
+            'nutstools_settings.yml' located in 'directory'.
             This file is created the first run and read every next run. Altering the values in this file  alters the
-            default behaviour. The default behaviour can also be overwritten by using the *update_settings* command line
+            default behaviour. The default behaviour can also be overwritten by using the update_settings command line
             argument
         url (str): The URL to the NUTS data at the EU website. Is stored in the settings file and can be altered there.
         year (str): The year for which the NUTS data is retrieved. Defaults to '2021' (current latest version), but
