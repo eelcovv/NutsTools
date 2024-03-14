@@ -1,5 +1,30 @@
-# Class definition for NutsTools. Can be used in your own Python code to retrieve the nuts data from the EU-website
-# and convert postal codes in NUTS codes
+# -*- coding: utf-8 -*-
+"""
+Class definition for NutsTools. Can be used in your own Python code to retrieve the nuts data from the EU-website
+and convert postal codes in NUTS codes
+
+Examples:
+
+    from nutstools.postalnuts import NutsPostalCode, NutsData
+
+    # This initialises the default file location (in local cache) + downloads the file from the eurostat website
+    nuts_data = NutsData()
+
+    # This reads the postcode from the nuts code file and turns it into a data frame
+    nuts = NutsPostalCode(nuts_data.nuts_codes_file)
+
+    # now you can convert single postal code to NUTS
+    post_code = "2612AB"
+    nuts_code = nuts.one_postal2nuts(postal_code=post_code)
+
+    # or you can convert a series of postcode
+    postal_codes = [
+        "8277 AM",
+        "2871 KA",
+    ]
+
+    all_codes = nuts.postal2nuts(postal_codes=postal_codes)
+"""
 
 import logging
 from pathlib import Path
@@ -9,9 +34,16 @@ import pandas as pd
 import requests
 
 try:
-    from requests_kerberos_proxy.util import get_session
+    import requests_kerberos_proxy
 except ImportError:
     requests_kerberos_proxy = None
+else:
+    try:
+        from requests_kerberos_proxy.util import get_session
+    except ImportError as err:
+        raise ImportError(
+            "Module 'request_kerberos_proxy' was found but 'get_session' could not be imported"
+        )
 
 import yaml
 
@@ -225,10 +257,10 @@ class NutsData:
         if not self.settings_file_name.exists() or update_settings:
             _logger.info(f"Writing default settings to {self.settings_file_name}")
             with open(self.settings_file_name, "w") as stream:
-                yaml.dump(default_settings, stream, default_flow_style=False)
+                yaml.dump(default_settings, stream)
 
         _logger.info(f"Reading settings from {self.settings_file_name}")
-        with open(self.settings_file_name, "r") as stream:
+        with open(self.settings_file_name) as stream:
             self.settings = yaml.safe_load(stream)
 
         self.get_nuts_settings()
@@ -260,8 +292,8 @@ class NutsData:
 
         try:
             nuts_year_prop = NUTS_DATA[self.year]
-        except KeyError as err:
-            _logger.warning(err)
+        except KeyError as nuts_err:
+            _logger.warning(nuts_err)
             raise KeyError(f"Year {self.year} not available. Please pick another one")
 
         self.url = nuts_year_prop["url"]
@@ -269,8 +301,8 @@ class NutsData:
 
         try:
             remote_file_name = nuts_files[self.country]
-        except KeyError as err:
-            _logger.warning(err)
+        except KeyError as remote_err:
+            _logger.warning(remote_err)
             raise KeyError(
                 f"Country {self.country} not available. Please pick another one"
             )
