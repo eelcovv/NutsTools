@@ -39,14 +39,14 @@ def test_main_one_postalcode(capsys):
     assert captured.out == "8277AM    NL211\n"
 
 
-def test_main_input_file(capsys):
+def test_main_input_file_nl(capsys):
     """CLI Tests"""
     # capsys is a pytest fixture that allows asserts against stdout/stderr
     # https://docs.pytest.org/en/stable/capture.html
     root = get_root_directory()
 
-    postal_codes = root / Path("examples/postal_codes.txt")
-    postal_codes_expected = root / Path("tests/postal_codes_expected.txt")
+    postal_codes = root / Path("examples/postal_codes_NL.txt")
+    postal_codes_expected = root / Path("tests/postal_codes_NL_expected.txt")
 
     main(
         [
@@ -56,10 +56,42 @@ def test_main_input_file(capsys):
             postal_codes.as_posix(),
             "--output_file_name",
             "-",
+            "--country",
+            "NL",
+            "--update_settings",
         ]
     )
     captured = capsys.readouterr()
-    with open(postal_codes_expected.as_posix(), "r") as fp:
+    with open(postal_codes_expected.as_posix()) as fp:
+        for line in captured.out.splitlines():
+            expected_line = fp.readline().strip()
+            assert line == expected_line
+
+
+def test_main_input_file_be(capsys):
+    """CLI Tests"""
+    # capsys is a pytest fixture that allows asserts against stdout/stderr
+    # https://docs.pytest.org/en/stable/capture.html
+    root = get_root_directory()
+
+    postal_codes = root / Path("examples/postal_codes_BE.txt")
+    postal_codes_expected = root / Path("tests/postal_codes_BE_expected.txt")
+
+    main(
+        [
+            "--nuts_file_name",
+            "pc2020_BE_NUTS-2021_v2.0_selection.csv",
+            "--input_file",
+            postal_codes.as_posix(),
+            "--output_file_name",
+            "-",
+            "--country",
+            "BE",
+            "--update_settings",
+        ]
+    )
+    captured = capsys.readouterr()
+    with open(postal_codes_expected.as_posix()) as fp:
         for line in captured.out.splitlines():
             expected_line = fp.readline().strip()
             assert line == expected_line

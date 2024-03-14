@@ -19,11 +19,11 @@ Output of this command is:
 
     2612AB    NL333
 
-Convert the file *postal_codes.txt* with postal codes to NUTS:
+Convert the file *postal_codes_NL.txt* with postal codes to NUTS:
 
 .. code-block:: text
 
-    >> postalcode2nuts.exe --input_file_name postal_codes.txt --output_file_name -
+    >> postalcode2nuts.exe --input_file_name postal_codes_NL.txt --output_file_name -
 
 gives  the following output:
 

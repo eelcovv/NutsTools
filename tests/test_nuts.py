@@ -1,6 +1,5 @@
 from argparse import ArgumentTypeError
 
-
 import pytest
 from pathlib import Path
 
@@ -131,7 +130,7 @@ def test_postal2nuts():
         nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=4)
 
 
-def test_get_nuts_settings():
+def test_get_nuts_settings_nl():
     """test the retrieving of the default nuts settings"""
     root = get_root_directory()
     nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
@@ -139,6 +138,8 @@ def test_get_nuts_settings():
     nuts_dl = NutsData(
         nuts_code_directory=".",
         nuts_file_name=nuts_file_name,
+        country="NL",
+        update_settings=True,
     )
     nuts_dl.impose_nuts_settings()
 
@@ -149,3 +150,25 @@ def test_get_nuts_settings():
         == "https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_NL_NUTS-2021_v2.0.zip"
     )
     assert "Cache/pc2020_NL_NUTS-2021_v2.0.zip" == nuts_dl.nuts_codes_file.as_posix()
+
+
+def test_get_nuts_settings_be():
+    """test the retrieving of the default nuts settings"""
+    root = get_root_directory()
+    nuts_file_name = root / Path("tests/pc2020_BE_NUTS-2021_v1.0_selection.csv")
+
+    nuts_dl = NutsData(
+        nuts_code_directory=".",
+        nuts_file_name=nuts_file_name,
+        country="BE",
+        update_settings=True,
+    )
+    nuts_dl.impose_nuts_settings()
+
+    assert nuts_dl.country == "BE"
+    assert nuts_dl.year == "2021"
+    assert (
+        nuts_dl.url
+        == "https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_BE_NUTS-2021_v1.0.zip"
+    )
+    assert "Cache/pc2020_BE_NUTS-2021_v1.0.zip" == nuts_dl.nuts_codes_file.as_posix()
