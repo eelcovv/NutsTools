@@ -141,13 +141,16 @@ class NutsPostalCode:
             Series: The converted NUTS codes. The postal codes are put on the index.
         """
 
-        assert level in (0, 1, 2, 3)
+        if level not in (0, 1, 2, 3):
+            raise ValueError("Level of nuts codes must be in range 0..3")
 
         if isinstance(postal_codes, list):
             # turn list into Series
             postal_codes = pd.Series(postal_codes)
 
+        # remove white spaces, leading and trailing spaces, and force to upper
         postal_codes = postal_codes.str.replace("\s", "", regex=True)
+        postal_codes = postal_codes.str.upper()
 
         nuts_codes = self.nuts_data.reindex(postal_codes)
 

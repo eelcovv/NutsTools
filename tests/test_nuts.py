@@ -4,6 +4,8 @@ from argparse import ArgumentTypeError
 import pytest
 from pathlib import Path
 
+import pandas as pd
+
 from nutstools.main import check_if_valid_nuts_level
 from nutstools.postalnuts import NutsPostalCode, NutsData
 from test_nuts_command_line_tool import get_root_directory
@@ -52,7 +54,7 @@ def test_nuts_data():
     )
 
 
-def test_nuts_postcode():
+def test_one_postal2nuts():
     """NutsData is used to store the default file location"""
     root = get_root_directory()
     nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
@@ -87,6 +89,46 @@ def test_nuts_postcode():
     # non-string postal code gives attribute error
     with pytest.raises(AttributeError):
         nuts.one_postal2nuts(postal_code=6)
+
+
+def test_postal2nuts():
+    """NutsData is used to store the default file location"""
+    root = get_root_directory()
+    nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
+
+    nuts = NutsPostalCode(file_name=nuts_file_name)
+
+    postal_codes = ["2675BP", "5704 HG", "3344  em"]
+    postal_codes_series = pd.Series(postal_codes)
+    postal_codes_clean = ["2675BP", "5704HG", "3344EM"]
+    nuts_codes_3 = ["NL333", "NL414", "NL33A"]
+    nuts_codes_2 = ["NL33", "NL41", "NL33"]
+    nuts_codes_1 = ["NL3", "NL4", "NL3"]
+    nuts_codes_0 = ["NL", "NL", "NL"]
+
+    nuts_codes_3 = pd.Series(nuts_codes_3, index=postal_codes_clean, name="NUTS3")
+    nuts_codes_2 = pd.Series(nuts_codes_2, index=postal_codes_clean, name="NUTS2")
+    nuts_codes_1 = pd.Series(nuts_codes_1, index=postal_codes_clean, name="NUTS1")
+    nuts_codes_0 = pd.Series(nuts_codes_0, index=postal_codes_clean, name="NUTS0")
+
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes)
+    pd.testing.assert_series_equal(nuts_codes_3, nuts_codes)
+
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes_series)
+    pd.testing.assert_series_equal(nuts_codes_3, nuts_codes)
+
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=2)
+    pd.testing.assert_series_equal(nuts_codes_2, nuts_codes)
+
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=1)
+    pd.testing.assert_series_equal(nuts_codes_1, nuts_codes)
+
+    nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=0)
+    pd.testing.assert_series_equal(nuts_codes_0, nuts_codes)
+
+    # level must be in range 0 -- 3. Assertion error is raised otherwise
+    with pytest.raises(ValueError):
+        nuts_codes = nuts.postal2nuts(postal_codes=postal_codes, level=4)
 
 
 def test_get_nuts_settings():
