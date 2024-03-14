@@ -292,7 +292,7 @@ class NutsData:
         with open(self.settings_file_name) as stream:
             self.settings = yaml.safe_load(stream)
 
-        self.get_nuts_settings()
+        self.impose_nuts_settings()
 
         if nuts_file_name is not None:
             nuts_file_name = Path(nuts_file_name)
@@ -311,7 +311,7 @@ class NutsData:
         else:
             self.nuts_data = pd.read_csv(self.nuts_codes_file, sep=";")
 
-    def get_nuts_settings(self):
+    def impose_nuts_settings(self):
         """
         Read the settings of the tool from the stored settings file
         """

@@ -36,7 +36,7 @@ def test_check_if_valid_nuts_level_four():
 
 
 def test_nuts_data():
-    """ NutsData is used to store the default file location """
+    """NutsData is used to store the default file location"""
     root = get_root_directory()
     nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
 
@@ -45,12 +45,15 @@ def test_nuts_data():
         nuts_file_name=nuts_file_name,
     )
     assert nuts_dl.nuts_codes_file == Path(nuts_file_name)
-    assert nuts_dl.year == '2021'
-    assert nuts_dl.url == "https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_NL_NUTS-2021_v2.0.zip"
+    assert nuts_dl.year == "2021"
+    assert (
+        nuts_dl.url
+        == "https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_NL_NUTS-2021_v2.0.zip"
+    )
 
 
 def test_nuts_postcode():
-    """ NutsData is used to store the default file location """
+    """NutsData is used to store the default file location"""
     root = get_root_directory()
     nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
 
@@ -70,3 +73,21 @@ def test_nuts_postcode():
         nuts.one_postal2nuts(postal_code=6)
 
 
+def test_get_nuts_settings():
+    """test the retrieving of the default nuts settings"""
+    root = get_root_directory()
+    nuts_file_name = root / Path("tests/pc2020_NL_NUTS-2021_v2.0_selection.csv")
+
+    nuts_dl = NutsData(
+        nuts_code_directory=".",
+        nuts_file_name=nuts_file_name,
+    )
+    nuts_dl.impose_nuts_settings()
+
+    assert nuts_dl.country == "NL"
+    assert nuts_dl.year == "2021"
+    assert (
+        nuts_dl.url
+        == "https://gisco-services.ec.europa.eu/tercet/NUTS-2021//pc2020_NL_NUTS-2021_v2.0.zip"
+    )
+    assert "Cache/pc2020_NL_NUTS-2021_v2.0.zip" == nuts_dl.nuts_codes_file.as_posix()
