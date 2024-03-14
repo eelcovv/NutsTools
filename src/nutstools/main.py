@@ -272,6 +272,8 @@ def main(args):
         print(f"Settings file : {nuts_dl.settings_file_name}")
         print(f"Nuts code file: {nuts_dl.nuts_codes_file}")
         print(f"URL of source : {nuts_dl.url}")
+        print(f"Country to show: {nuts_dl.country}")
+        print(f"Year of data: {nuts_dl.year}")
         sys.exit(0)
 
     if args.input_file_name is not None:
