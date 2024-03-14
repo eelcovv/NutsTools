@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 This file contains the global variables used in the code for NutsTools. It stores the default values.
-The values are stored in the settings file stored in the default location (LocalAppData\NutsTools in Windows or
-.local/share/NutsTools in Linux). The second run, the global variables are read from this settings file. You can
-modify the settings file to your needs.
+The values are stored in the settings file stored in the default location.
+The second run, the global variables are read from this settings file.
+You can modify the settings file to your needs.
 """
 
 NUTS_CODE_DEFAULT_DIRECTORY = "nutstools"
