@@ -5,6 +5,8 @@ A tool to convert postal codes to NUTS-values based on the NUTS files distribute
 Usage:
 ------
 
+**Examples**:
+
 Convert a postal code to NUTS:
 
 .. code-block:: text
@@ -35,11 +37,10 @@ gives  the following output:
     7543GV    NL213
 
 In case the *--output_file_name* argument is not given, the codes are written to file with the same name
-as the input file with a suffix nuts3 (default), where 3 standards for the level of the NUTS output.
+as the input file with a suffix nuts3 (default), where 3 stands for the level of the NUTS output.
 The level can be altered using the *--level*  option.
 
-Help:
------
+**Help**:
 
 .. code-block:: text
 
