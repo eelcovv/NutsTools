@@ -5,25 +5,45 @@ and convert postal codes in NUTS codes
 
 Examples:
 
-    from nutstools.postalnuts import NutsPostalCode, NutsData
+    In order to download the EU NUTS data to the default location, use create the NutsData object::
 
-    # This initialises the default file location (in local cache) + downloads the file from the eurostat website
-    nuts_data = NutsData()
+        from nutstools.postalnuts import NutsData
+        nuts_data = NutsData()
 
-    # This reads the postcode from the nuts code file and turns it into a data frame
-    nuts = NutsPostalCode(nuts_data.nuts_codes_file)
+    In case the NUTS data was downloaded before, only the nuts_data object is created, but the data will not be
+    downloaded again.
 
-    # now you can convert single postal code to NUTS
-    post_code = "2612AB"
-    nuts_code = nuts.one_postal2nuts(postal_code=post_code)
+    As a nex step, you can use the NutsPostalCode class to import the NUTS-data and convert postal codes to NUTS::
 
-    # or you can convert a series of postcode
-    postal_codes = [
-        "8277 AM",
-        "2871 KA",
-    ]
+        nuts = NutsPostalCode(nuts_data.nuts_codes_file)
 
-    all_codes = nuts.postal2nuts(postal_codes=postal_codes)
+        post_code = "2612AB"
+        nuts_code = nuts.one_postal2nuts(postal_code=post_code)
+        print(f"Postal code {post_code} has nuts code {nuts_code}")
+
+    The returned *nuts_code* is a string with the NUTS code, so the output looks like::
+
+        Postal code 2612AB has nuts code NL333
+
+    You can also convert a list or a serie of postal codes like this::
+
+        postal_codes = [
+            "8277 AM",
+            "2871 KA",
+        ]
+
+        all_codes = nuts.postal2nuts(postal_codes=postal_codes)
+        print(all_codes)
+
+    The returned *all_codes* is a Series which looks like::
+
+        8277AM    NL211
+        2871KA    NL33B
+        9408BJ    NL131
+        3076KA    NL33C
+        3068LM    NL33C
+        7543GV    NL213
+        4181DG    NL224
 """
 
 import logging
