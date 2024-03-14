@@ -77,6 +77,7 @@ The level can be altered using the *--level*  option.
       --force_download      Forces to download the datafile again, even if it already exists
       --directory DIRECTORY
                         The location of the the NUTS files. If not given, the default directory will be picked
+      --config_show         Show the location of the configuration files and exit
 """
 
 import argparse
@@ -209,6 +210,12 @@ def parse_args(args):
         help="The location of the  the NUTS files. If not given, the default directory will be picked ",
     )
 
+    parser.add_argument(
+        "--config_show",
+        help="Show the location of the configuration files and exit",
+        action="store_true",
+    )
+
     return parser.parse_args(args)
 
 
@@ -237,17 +244,20 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    if args.postal_code is None and args.input_file_name is None:
-        raise argparse.ArgumentError(
-            argument=args.postal_code,
-            message="Either --postal_code or --input_file_name option must be given",
-        )
-    elif args.postal_code is not None and args.input_file_name is not None:
-        raise argparse.ArgumentError(
-            argument=args.postal_code,
-            message="Only one of the options --postal_code or --input_file_name option can "
-            "be given",
-        )
+    if not args.config_show:
+        # in case config show is not requested: check if postal_code or input_file_name is given
+        if args.postal_code is None and args.input_file_name is None:
+            raise argparse.ArgumentError(
+                argument=args.postal_code,
+                message="Either --postal_code or --input_file_name option must be given",
+            )
+        elif args.postal_code is not None and args.input_file_name is not None:
+            # also check if not both argumetns are given
+            raise argparse.ArgumentError(
+                argument=args.postal_code,
+                message="Only one of the options --postal_code or --input_file_name option can "
+                "be given",
+            )
 
     nuts_dl = postalnuts.NutsData(
         year=args.year,
@@ -257,6 +267,12 @@ def main(args):
         update_settings=args.update_settings,
         force_download=args.force_download,
     )
+
+    if args.config_show:
+        print(f"Settings file : {nuts_dl.settings_file_name}")
+        print(f"Nuts code file: {nuts_dl.nuts_codes_file}")
+        print(f"URL of source : {nuts_dl.url}")
+        sys.exit(0)
 
     if args.input_file_name is not None:
         input_file_name = Path(args.input_file_name)
