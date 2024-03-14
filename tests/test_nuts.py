@@ -81,9 +81,10 @@ def test_nuts_postcode():
         nuts_code = nuts.one_postal2nuts(postal_code=postal_code, level=0)
         assert nuts_code == expected_code
 
-    with pytest.raises(KeyError):
-        nuts.one_postal2nuts(postal_code="9999ZZ")
+    # postal code outside of domain gives None
+    assert nuts.one_postal2nuts(postal_code="9999ZZ") is None
 
+    # non-string postal code gives attribute error
     with pytest.raises(AttributeError):
         nuts.one_postal2nuts(postal_code=6)
 
