@@ -10,6 +10,11 @@ Convert a postal code to NUTS:
 .. code-block:: text
 
     > postalcode2nuts.exe --postal_code 2612AB
+
+Output of this command is:
+
+.. code-block:: text
+
     2612AB    NL333
 
 Convert the file *postal_codes.txt* with postal codes to NUTS:
@@ -18,7 +23,7 @@ Convert the file *postal_codes.txt* with postal codes to NUTS:
 
     >> postalcode2nuts.exe --input_file_name postal_codes.txt --output_file_name -
 
-gives  the following output::
+gives  the following output:
 
 .. code-block:: text
 
