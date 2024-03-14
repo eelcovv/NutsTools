@@ -44,6 +44,8 @@ def test_nuts_data():
     nuts_dl = NutsData(
         nuts_code_directory=".",
         nuts_file_name=nuts_file_name,
+        country="NL",
+        update_settings=True,
     )
     assert nuts_dl.nuts_codes_file == Path(nuts_file_name)
     assert nuts_dl.year == "2021"
