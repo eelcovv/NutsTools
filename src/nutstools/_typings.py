@@ -1,8 +1,8 @@
-from typing import Union
+from typing import Union, TypeAlias
 from pandas import Series, DataFrame
 from pathlib import Path
 
-SerieType = Union[Series, None]
-DataFrameType = Union[DataFrame, None]
-SeriesLike = Union[Series, list]
-PathLike = Union[Path, str]
+SerieType: TypeAlias = Union[Series, None]
+DataFrameType: TypeAlias = Union[DataFrame, None]
+SeriesLike: TypeAlias = Union[Series, list]
+PathLike: TypeAlias = Union[Path, str]

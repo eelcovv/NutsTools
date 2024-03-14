@@ -39,7 +39,7 @@ class NutsPostalCode:
         file_name (PathLike): The nuts input file holding all the nuts codes. Can be either a pathlib Path or a string.
 
     Attributes:
-        file_name (Path): Path of the file contains the nuts code downloaded from the Eurostat website
+        file_name (Path|str): Path of the file contains the nuts code downloaded from the Eurostat website
         nuts_data (DataFrame): All the nuts data loaded from the file
         nuts_key (str): Name of column containing the NUTS codes. Equal to the first column of the input data file
         postal_codes_key (str): Name of the column containing the postal codes. Equal to the second column of the input
