@@ -159,20 +159,20 @@ class NutsData:
         update_settings (bool): If true, the settings file is updated.
 
     Attributes:
-        directory (Path): Location of the configuration settings file. Defaults to
-            C:\\\\Users\\\\username\\\\AppData\\\\Local\\\\nutstools (Windows) or /home/username/.local/share (linux)
-        cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to 'Cache' relative
-            'directory'.
-        settings_file_name (Path): Name of the settings file to store the default settings. Defaults to
-            'nutstools_settings.yml' located in 'directory'.
+        directory (Path): Location of the configuration settings file. Default is *nutstools* in eiter
+            *C:\\\\Users\\\\username\\\\AppData\\\\Local* (Windows) or */home/username/.local/share* (linux)
+        cache_directory (Path): directory where downloaded data is stored for reuse. Defaults to *Cache* relative
+            *directory*.
+        settings_file_name (Path): Name of the settings file to store the default settings. Default is
+            *nutstools_settings.yml* located in *directory*.
             This file is created the first run and read every next run. Altering the values in this file  alters the
             default behaviour. The default behaviour can also be overwritten by using the update_settings command line
             argument
         url (str): The URL to the NUTS data at the EU website. Is stored in the settings file and can be altered there.
-        year (str): The year for which the NUTS data is retrieved. Defaults to '2021' (current latest version), but
+        year (str): The year for which the NUTS data is retrieved. Default is *2021* (current latest version), but
             can be altered in the settings file.
-        country (str): Two-letter code to set the country for which we want to download the NUTS data. Defaults to
-            'NL'. Can be altered using the *country* command line option combined with *update_settings* in order
+        country (str): Two-letter code to set the country for which we want to download the NUTS data. Default is
+            *NL*. Can be altered using the *country* command line option combined with *update_settings* in order
             to force to rewrite the settings file
         nuts_codes_file (PathLike): The filename to the NUTS data downloaded from the EU website
         nuts_data (DataFrame): The Dataframe where the NUTS data is stored after reading the *nuts_codes_file*
