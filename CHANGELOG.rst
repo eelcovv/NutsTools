@@ -2,6 +2,10 @@
 Changelog
 =========
 
+Version 0.5.6
+=============
+- Minor fix in regular expression to prevent warning in python
+
 Version 0.5.5
 =============
 - Added correct project links and links to readthedocs

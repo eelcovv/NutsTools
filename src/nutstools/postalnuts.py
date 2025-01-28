@@ -122,7 +122,7 @@ class NutsPostalCode:
             self.nuts_data[column_name] = (
                 self.nuts_data[column_name]
                 .str.replace("'", "")
-                .replace("\s", "", regex=True)
+                .replace(r"\s", "", regex=True)
             )
         self.nuts_data = self.nuts_data.set_index(self.postal_codes_key, drop=True)[
             self.nuts_key
@@ -149,7 +149,7 @@ class NutsPostalCode:
             postal_codes = pd.Series(postal_codes)
 
         # remove white spaces, leading and trailing spaces, and force to upper
-        postal_codes = postal_codes.str.replace("\s", "", regex=True)
+        postal_codes = postal_codes.str.replace(r"\s", "", regex=True)
         postal_codes = postal_codes.str.upper()
 
         nuts_codes = self.nuts_data.reindex(postal_codes)
