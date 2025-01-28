@@ -743,7 +743,7 @@ wheels = [
 
 [[package]]
 name = "nutstools"
-version = "0.5.6"
+version = "0.5.6.post1.dev0+g63fcd81.d20250128"
 source = { editable = "." }
 dependencies = [
     { name = "appdirs" },
