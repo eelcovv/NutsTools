@@ -13,12 +13,12 @@ name = "NutsTools"
 description = "Obtain NUTS codes by postal codes"
 authors = [{name = "EVLT", email = "EVLT@cbs.nl"}]
 license = {text = "MIT"}
+requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
 ]
 dependencies = [
-    'importlib-metadata; python_version<"3.8"',
     "appdirs",
     "requests",
     "pyarrow",
@@ -51,7 +51,7 @@ Documentation = "http://nutstools.readthedocs.io/"
 proxy = ["requests-kerberos-proxy"]
 
 [dependency-groups]
-dev = ["tox", "pre-commit", "pytest"]
+dev = ["tox", "pre-commit", "pytest", "pytest-cov", "setuptools"]
 # Add here test requirements (semicolon/line-separated)
 testing = [
     "setuptools",

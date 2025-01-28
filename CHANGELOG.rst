@@ -5,6 +5,7 @@ Changelog
 Version 0.5.6
 =============
 - Minor fix in regular expression to prevent warning in python
+- package now based on pyproject.toml
 
 Version 0.5.5
 =============
