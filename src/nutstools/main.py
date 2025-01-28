@@ -297,7 +297,7 @@ def main(args):
     postal_codes = (
         postal_codes[first_column_name]
         .str.replace("'", "")
-        .replace("\s", "", regex=True)
+        .replace(r"\s", "", regex=True)
     )
 
     nuts = postalnuts.NutsPostalCode(file_name=nuts_dl.nuts_codes_file)
